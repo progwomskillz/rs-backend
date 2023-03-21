@@ -1,0 +1,20 @@
+tags:
+  - "Auth"
+
+parameters:
+  - in: "body"
+    name: "body"
+    required: true
+    schema:
+      type: "object"
+      properties:
+        refresh:
+          type: "string"
+
+responses:
+  200:
+    schema:
+      $ref: "#/definitions/TokensPair"
+  401:
+    schema:
+      $ref: "#/definitions/Error"

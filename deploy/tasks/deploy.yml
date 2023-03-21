@@ -1,0 +1,59 @@
+- hosts: "backend"
+  vars:
+    - server_username: "{{ server_username }}"
+    - domain: "{{ domain }}"
+  tasks:
+    - name: "Make a directory"
+      file:
+        name: "~/app/"
+        state: "directory"
+    - name: "Inject the .env"
+      copy:
+        src: "./../../.env"
+        dest: "~/app/"
+    - name: "Inject the docker-compose.yml"
+      copy:
+        src: "./../../docker-compose.yml"
+        dest: "~/app/"
+    - name: "Send the docker app image file"
+      copy:
+        src: "./../files/app"
+        dest: "/tmp/app"
+    - name: "Load the docker app image"
+      shell: "docker load < /tmp/app"
+    - name: "Copy base nginx config"
+      become: yes
+      template:
+        src: "./../templates/nginx.conf.j2"
+        dest: "/etc/nginx/nginx.conf"
+    - name: "Copy app nginx config"
+      become: yes
+      template:
+        src: "./../templates/app.nginx.conf.j2"
+        dest: "/etc/nginx/conf.d/app.nginx.conf"
+    - name: "Reload nginx"
+      become: yes
+      service:
+        name: "nginx"
+        state: "restarted"
+    - name: "docker-compose up -d --remove-orphans"
+      command: "docker-compose up -d --remove-orphans"
+      args:
+        chdir: "~/app/"
+    - name: "Delete the .env"
+      file:
+        path: "~/app/.env"
+        state: "absent"
+    - name: "Delete the docker-compose.yml"
+      file:
+        path: "~/app/docker-compose.yml"
+        state: "absent"
+    - name: "Delete the docker app image file"
+      file:
+        path: "/tmp/app"
+        state: "absent"
+    - name: "Delete dangling volumes"
+      shell: "docker volume rm $(docker volume ls -q -f dangling=true)"
+      ignore_errors: yes
+    - name: "Delete dangling images"
+      shell: "docker image prune -f"

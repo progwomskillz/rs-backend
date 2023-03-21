@@ -1,0 +1,10 @@
+tags:
+  - "Server"
+
+responses:
+  200:
+    schema:
+      type: "object"
+      properties:
+        message:
+          type: "string"

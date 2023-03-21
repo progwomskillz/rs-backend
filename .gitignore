@@ -1,0 +1,18 @@
+# Ignore venv
+/venv/
+
+# Ignore IDE files
+/.vscode/
+/.idea/
+
+# Ignore tests and python temp files
+.pytest_cache/
+__pycache__/
+*__pycache__/
+/__pycache__/
+*.py[cod]
+*~
+
+# Ignore secrets files
+.env
+/secrets/*/server.pem

@@ -1,0 +1,35 @@
+version: "3.5"
+services:
+  app:
+    build: "."
+    image: "${APP_NAME}:latest"
+    env_file: "./.env"
+    container_name: "app"
+    restart: "unless-stopped"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "5m"
+        max-file: "3"
+    ports:
+      - "8000:8000"
+    volumes:
+      - "~${DOCKER_SHARED_VOLUME_PATH}${APP_NAME}/app:${DOCKER_SHARED_VOLUME_PATH}"
+    depends_on:
+      - "db"
+  db:
+    image: "mongo:6"
+    container_name: "db"
+    restart: "unless-stopped"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "5m"
+        max-file: "3"
+    ports:
+      - "27017:27017"
+    volumes:
+      - "~${DOCKER_SHARED_VOLUME_PATH}${APP_NAME}/db:/data/db"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: "${DB_USERNAME}"
+      MONGO_INITDB_ROOT_PASSWORD: "${DB_PASSWORD}"

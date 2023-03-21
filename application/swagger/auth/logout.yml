@@ -1,0 +1,13 @@
+tags:
+  - "Auth"
+
+security:
+  - token: []
+
+responses:
+  200:
+    schema:
+      type: "object"
+  401:
+    schema:
+      $ref: "#/definitions/Error"
