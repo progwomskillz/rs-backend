@@ -2,6 +2,7 @@ from mock import Mock
 
 from data.translators.users import UserTranslator
 from domain.entities.users import User
+from domain.utils import constants
 from tests.factories.users import UserFactory
 
 
@@ -12,9 +13,9 @@ class TestUserTranslator():
         self.community_social_worker_profile_translator_mock = Mock()
         self.public_official_profile_translator_mock = Mock()
         self.profile_translators = {
-            "admin": self.admin_profile_translator_mock,
-            "community_social_worker": self.community_social_worker_profile_translator_mock,
-            "public_official": self.public_official_profile_translator_mock
+            constants.user_roles.admin: self.admin_profile_translator_mock,
+            constants.user_roles.community_social_worker: self.community_social_worker_profile_translator_mock,
+            constants.user_roles.public_official: self.public_official_profile_translator_mock
         }
 
         self.translator = UserTranslator(
@@ -30,7 +31,7 @@ class TestUserTranslator():
     def test_from_document_admin(self):
         document = {
             "_id": "test_id",
-            "role": "admin",
+            "role": constants.user_roles.admin,
             "email": "test@example.com",
             "password_hash": b"test_password_hash",
             "tokens_pairs": [
@@ -113,7 +114,7 @@ class TestUserTranslator():
     def test_from_document_community_social_worker(self):
         document = {
             "_id": "test_id",
-            "role": "community_social_worker",
+            "role": constants.user_roles.community_social_worker,
             "email": "test@example.com",
             "password_hash": b"test_password_hash",
             "tokens_pairs": [
@@ -194,7 +195,7 @@ class TestUserTranslator():
     def test_from_document_public_official(self):
         document = {
             "_id": "test_id",
-            "role": "public_official",
+            "role": constants.user_roles.public_official,
             "email": "test@example.com",
             "password_hash": b"test_password_hash",
             "tokens_pairs": [

@@ -1,6 +1,7 @@
 from application.structure import structure
 from data.translators.auth import TokensPairTranslator
 from domain.entities.users import User, AdminProfile
+from domain.utils import constants
 from tests.factories.users import UserFactory
 
 
@@ -18,7 +19,7 @@ class TestUserTranslator():
     def test_from_document(self):
         document = {
             "_id": "test_id",
-            "role": "admin",
+            "role": constants.user_roles.admin,
             "email": "test@example.com",
             "password_hash": b"test_password_hash",
             "tokens_pairs": [

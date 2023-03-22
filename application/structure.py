@@ -26,6 +26,7 @@ from domain.utils.validation import (
     PrincipalValidationUtil,
     RBACValidationUtil
 )
+from domain.utils import constants
 from presentation.handlers.auth import (
     LoginHandler,
     LogoutHandler,
@@ -72,9 +73,9 @@ class Structure():
         return UserTranslator(
             self.tokens_pair_translator,
             {
-                "admin": self.admin_profile_translator,
-                "community_social_worker": self.community_social_worker_profile_translator,
-                "public_official": self.public_official_profile_translator
+                constants.user_roles.admin: self.admin_profile_translator,
+                constants.user_roles.community_social_worker: self.community_social_worker_profile_translator,
+                constants.user_roles.public_official: self.public_official_profile_translator
             }
         )
 

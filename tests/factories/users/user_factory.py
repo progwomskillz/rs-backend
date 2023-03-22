@@ -1,5 +1,6 @@
 from application.structure import structure
 from domain.entities.users import User
+from domain.utils import constants
 from .profiles_factory import ProfilesFactory
 
 
@@ -21,18 +22,21 @@ class UserFactory():
 
     @staticmethod
     def admin():
-        return UserFactory.generic("admin", ProfilesFactory.admin())
+        return UserFactory.generic(
+            constants.user_roles.admin,
+            ProfilesFactory.admin()
+        )
 
     @staticmethod
     def community_social_worker():
         return UserFactory.generic(
-            "community_social_worker",
+            constants.user_roles.community_social_worker,
             ProfilesFactory.community_social_worker()
         )
 
     @staticmethod
     def public_official():
         return UserFactory.generic(
-            "public_official",
+            constants.user_roles.public_official,
             ProfilesFactory.public_official()
         )

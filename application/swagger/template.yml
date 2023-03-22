@@ -1,7 +1,7 @@
 swagger: "2.0"
 
 info:
-  title: "Sound Oasis S600 Admin API"
+  title: "Rural Senses API"
   version: "1.0.0"
 
 schemes:

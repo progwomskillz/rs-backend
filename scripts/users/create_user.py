@@ -7,6 +7,7 @@ from domain.entities.users import (
     CommunitySocialWorkerProfile,
     PublicOfficialProfile
 )
+from domain.utils import constants
 
 
 role = ""
@@ -16,15 +17,15 @@ first_name = ""
 last_name = ""
 
 profiles_classes = {
-    "admin": {
+    constants.user_roles.admin: {
         "class": AdminProfile,
         "args": [first_name, last_name]
     },
-    "community_social_worker": {
+    constants.user_roles.community_social_worker: {
         "class": CommunitySocialWorkerProfile,
         "args": [first_name, last_name]
     },
-    "public_official": {
+    constants.user_roles.public_official: {
         "class": PublicOfficialProfile,
         "args": [first_name, last_name]
     }
