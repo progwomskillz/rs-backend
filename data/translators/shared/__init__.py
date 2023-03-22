@@ -1,1 +1,0 @@
-from .uploaded_file_translator import UploadedFileTranslator

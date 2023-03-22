@@ -2,21 +2,19 @@ import boto3
 
 from data.repositories import UsersRepository
 from data.translators.auth import TokensPairTranslator
-from data.translators.shared import UploadedFileTranslator
 from data.translators.users import (
     AdminProfileTranslator,
     CommunitySocialWorkerProfileTranslator,
     PublicOfficialProfileTranslator,
     UserTranslator
 )
-from data.utils.wrappers import BcryptWrapper, EnvWrapper, JWTWrapper, S3Wrapper
+from data.utils.wrappers import BcryptWrapper, EnvWrapper, JWTWrapper
 from domain.use_cases.auth import LoginUseCase, LogoutUseCase, RefreshUseCase
 from domain.use_cases.users import CreateUserUseCase, GetUsersPageUseCase
 from domain.utils.validation.auth import (
     LoginRequestValidationUtil,
     RefreshRequestValidationUtil
 )
-from domain.utils.validation.shared import UploadedFileValidationUtil
 from domain.utils.validation.users import (
     CreateUserRequestValidationUtil,
     GetUsersPageRequestValidationUtil
@@ -24,7 +22,6 @@ from domain.utils.validation.users import (
 from domain.utils.validation.validators import (
     EmailFormatValidator,
     EntryValidator,
-    ExistsUploadedFileValidator,
     PresenceValidator,
     TypeValidator
 )
@@ -40,7 +37,6 @@ from presentation.handlers.auth import (
 )
 from presentation.handlers.users import CreateUserHandler, GetUsersPageHandler
 from presentation.presenters.auth import TokensPairPresenter
-from presentation.presenters.shared import UploadedFilePresenter
 from presentation.presenters.users import (
     AdminProfilePresenter,
     CommunitySocialWorkerProfilePresenter,
