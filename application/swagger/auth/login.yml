@@ -10,8 +10,10 @@ parameters:
       properties:
         email:
           type: "string"
+          required: true
         password:
           type: "string"
+          required: true
 
 responses:
   200:

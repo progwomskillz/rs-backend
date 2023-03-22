@@ -73,3 +73,15 @@ definitions:
         type: "string"
       last_name:
         type: "string"
+
+  UsersPage:
+    type: "object"
+    properties:
+      items:
+        type: "array"
+        items:
+          $ref: "#/definitions/User"
+      page:
+        type: "integer"
+      page_count:
+        type: "integer"

@@ -12,3 +12,9 @@ base_swagger_path = "./../../swagger/users"
 @swag_from(f"{base_swagger_path}/create_user.yml")
 def create_user():
     return structure.create_user_handler.handle(request)
+
+
+@users_blueprint.route("", methods=["GET"])
+@swag_from(f"{base_swagger_path}/get_users_page.yml")
+def get_users_page():
+    return structure.get_users_page_handler.handle(request)

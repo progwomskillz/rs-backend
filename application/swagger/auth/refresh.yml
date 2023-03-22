@@ -10,6 +10,7 @@ parameters:
       properties:
         refresh:
           type: "string"
+          required: true
 
 responses:
   200:

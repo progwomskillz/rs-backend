@@ -1,0 +1,30 @@
+tags:
+  - "Users"
+
+parameters:
+  - in: "query"
+    name: "role"
+    type: "string"
+    required: true
+  - in: "query"
+    name: "page"
+    type: "integer"
+    required: true
+  - in: "query"
+    name: "page_size"
+    type: "integer"
+    required: true
+
+responses:
+  200:
+    schema:
+      $ref: "#/definitions/UsersPage"
+  400:
+    schema:
+      $ref: "#/definitions/Error"
+  401:
+    schema:
+      $ref: "#/definitions/Error"
+  403:
+    schema:
+      $ref: "#/definitions/Error"

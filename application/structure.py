@@ -11,13 +11,16 @@ from data.translators.users import (
 )
 from data.utils.wrappers import BcryptWrapper, EnvWrapper, JWTWrapper, S3Wrapper
 from domain.use_cases.auth import LoginUseCase, LogoutUseCase, RefreshUseCase
-from domain.use_cases.users import CreateUserUseCase
+from domain.use_cases.users import CreateUserUseCase, GetUsersPageUseCase
 from domain.utils.validation.auth import (
     LoginRequestValidationUtil,
     RefreshRequestValidationUtil
 )
 from domain.utils.validation.shared import UploadedFileValidationUtil
-from domain.utils.validation.users import CreateUserRequestValidationUtil
+from domain.utils.validation.users import (
+    CreateUserRequestValidationUtil,
+    GetUsersPageRequestValidationUtil
+)
 from domain.utils.validation.validators import (
     EmailFormatValidator,
     EntryValidator,
@@ -35,7 +38,7 @@ from presentation.handlers.auth import (
     LogoutHandler,
     RefreshHandler
 )
-from presentation.handlers.users import CreateUserHandler
+from presentation.handlers.users import CreateUserHandler, GetUsersPageHandler
 from presentation.presenters.auth import TokensPairPresenter
 from presentation.presenters.shared import UploadedFilePresenter
 from presentation.presenters.users import (
@@ -140,6 +143,15 @@ class Structure():
         )
 
     @property
+    def get_users_page_use_case(self):
+        return GetUsersPageUseCase(
+            self.principal_validation_util,
+            self.rbac_validation_util,
+            self.get_users_page_request_validation_util,
+            self.users_repository
+        )
+
+    @property
     def login_request_validation_util(self):
         return LoginRequestValidationUtil(
             self.presence_validator,
@@ -156,25 +168,53 @@ class Structure():
 
     @property
     def create_user_request_validation_util(self):
+        possible_values = [
+            constants.user_roles.community_social_worker,
+            constants.user_roles.public_official
+        ]
+        roles_entry_validator = EntryValidator(
+            possible_values,
+            f"{possible_values}"
+        )
         return CreateUserRequestValidationUtil(
             self.presence_validator,
             self.string_type_validator,
-            self.roles_entry_validator,
+            roles_entry_validator,
             self.email_format_validator,
             self.users_repository
         )
 
     @property
-    def email_format_validator(self):
-        return EmailFormatValidator()
-
-    @property
-    def roles_entry_validator(self):
-        possible_values = [
+    def get_users_page_request_validation_util(self):
+        admin_possible_values = [
             constants.user_roles.community_social_worker,
             constants.user_roles.public_official
         ]
-        return EntryValidator(possible_values, f"{possible_values}")
+        admin_roles_entry_validator = EntryValidator(
+            admin_possible_values,
+            f"{admin_possible_values}"
+        )
+        public_official_possible_values = [
+            constants.user_roles.community_social_worker
+        ]
+        public_official_roles_entry_validator = EntryValidator(
+            public_official_possible_values,
+            f"{public_official_possible_values}"
+        )
+        roles_entry_validators = {
+            constants.user_roles.admin: admin_roles_entry_validator,
+            constants.user_roles.public_official: public_official_roles_entry_validator
+        }
+        return GetUsersPageRequestValidationUtil(
+            self.presence_validator,
+            self.string_type_validator,
+            roles_entry_validators,
+            self.int_type_validator
+        )
+
+    @property
+    def email_format_validator(self):
+        return EmailFormatValidator()
 
     @property
     def presence_validator(self):
@@ -216,6 +256,14 @@ class Structure():
         )
 
     @property
+    def get_users_page_handler(self):
+        return GetUsersPageHandler(
+            self.get_users_page_use_case,
+            self.users_page_presenter,
+            self.principal_util
+        )
+
+    @property
     def tokens_pair_presenter(self):
         return TokensPairPresenter()
 
@@ -242,6 +290,10 @@ class Structure():
         )
 
     @property
+    def users_page_presenter(self):
+        return PagePresenter(self.user_presenter)
+
+    @property
     def principal_util(self):
         return PrincipalUtil(
             self.env_wrapper.get("JWT_TYPE"),
@@ -252,6 +304,10 @@ class Structure():
     @property
     def string_type_validator(self):
         return TypeValidator(str, "string")
+
+    @property
+    def int_type_validator(self):
+        return TypeValidator(int, "integer")
 
 
 structure = Structure()

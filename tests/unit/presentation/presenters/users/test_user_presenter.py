@@ -1,5 +1,6 @@
 from mock import Mock
 
+from domain.utils import constants
 from presentation.presenters.users import UserPresenter
 from tests.factories.users import UserFactory
 
@@ -8,7 +9,7 @@ class TestUserPresenter():
     def setup_method(self):
         self.admin_profile_presenter_mock = Mock()
         self.profile_presenters = {
-            "admin": self.admin_profile_presenter_mock
+            constants.user_roles.admin: self.admin_profile_presenter_mock
         }
 
         self.presenter = UserPresenter(self.profile_presenters)
