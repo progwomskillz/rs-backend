@@ -1,5 +1,3 @@
-import boto3
-
 from data.repositories import UsersRepository
 from data.translators.auth import TokensPairTranslator
 from data.translators.users import (
