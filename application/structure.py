@@ -11,13 +11,16 @@ from data.translators.users import (
 )
 from data.utils.wrappers import BcryptWrapper, EnvWrapper, JWTWrapper, S3Wrapper
 from domain.use_cases.auth import LoginUseCase, LogoutUseCase, RefreshUseCase
+from domain.use_cases.users import CreateUserUseCase
 from domain.utils.validation.auth import (
     LoginRequestValidationUtil,
     RefreshRequestValidationUtil
 )
 from domain.utils.validation.shared import UploadedFileValidationUtil
+from domain.utils.validation.users import CreateUserRequestValidationUtil
 from domain.utils.validation.validators import (
     EmailFormatValidator,
+    EntryValidator,
     ExistsUploadedFileValidator,
     PresenceValidator,
     TypeValidator
@@ -32,8 +35,15 @@ from presentation.handlers.auth import (
     LogoutHandler,
     RefreshHandler
 )
+from presentation.handlers.users import CreateUserHandler
 from presentation.presenters.auth import TokensPairPresenter
 from presentation.presenters.shared import UploadedFilePresenter
+from presentation.presenters.users import (
+    AdminProfilePresenter,
+    CommunitySocialWorkerProfilePresenter,
+    PublicOfficialProfilePresenter,
+    UserPresenter
+)
 from presentation.presenters import PagePresenter
 from presentation.utils import PrincipalUtil
 
@@ -120,6 +130,16 @@ class Structure():
         )
 
     @property
+    def create_user_use_case(self):
+        return CreateUserUseCase(
+            self.principal_validation_util,
+            self.rbac_validation_util,
+            self.create_user_request_validation_util,
+            self.bcrypt_wrapper,
+            self.users_repository
+        )
+
+    @property
     def login_request_validation_util(self):
         return LoginRequestValidationUtil(
             self.presence_validator,
@@ -135,8 +155,26 @@ class Structure():
         )
 
     @property
+    def create_user_request_validation_util(self):
+        return CreateUserRequestValidationUtil(
+            self.presence_validator,
+            self.string_type_validator,
+            self.roles_entry_validator,
+            self.email_format_validator,
+            self.users_repository
+        )
+
+    @property
     def email_format_validator(self):
         return EmailFormatValidator()
+
+    @property
+    def roles_entry_validator(self):
+        possible_values = [
+            constants.user_roles.community_social_worker,
+            constants.user_roles.public_official
+        ]
+        return EntryValidator(possible_values, f"{possible_values}")
 
     @property
     def presence_validator(self):
@@ -170,8 +208,38 @@ class Structure():
         )
 
     @property
+    def create_user_handler(self):
+        return CreateUserHandler(
+            self.create_user_use_case,
+            self.user_presenter,
+            self.principal_util
+        )
+
+    @property
     def tokens_pair_presenter(self):
         return TokensPairPresenter()
+
+    @property
+    def admin_profile_presenter(self):
+        return AdminProfilePresenter()
+
+    @property
+    def community_social_worker_profile_presenter(self):
+        return CommunitySocialWorkerProfilePresenter()
+
+    @property
+    def public_official_profile_presenter(self):
+        return PublicOfficialProfilePresenter()
+
+    @property
+    def user_presenter(self):
+        return UserPresenter(
+            {
+                constants.user_roles.admin: self.admin_profile_presenter,
+                constants.user_roles.community_social_worker: self.community_social_worker_profile_presenter,
+                constants.user_roles.public_official: self.public_official_profile_presenter
+            }
+        )
 
     @property
     def principal_util(self):

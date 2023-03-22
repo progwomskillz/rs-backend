@@ -1,0 +1,34 @@
+tags:
+  - "Users"
+
+parameters:
+  - in: "body"
+    name: "body"
+    required: true
+    schema:
+      type: "object"
+      properties:
+        role:
+          type: "string"
+        email:
+          type: "string"
+        password:
+          type: "string"
+        first_name:
+          type: "string"
+        last_name:
+          type: "string"
+
+responses:
+  200:
+    schema:
+      $ref: "#/definitions/User"
+  400:
+    schema:
+      $ref: "#/definitions/Error"
+  401:
+    schema:
+      $ref: "#/definitions/Error"
+  403:
+    schema:
+      $ref: "#/definitions/Error"

@@ -26,3 +26,50 @@ definitions:
         type: "string"
       refresh:
         type: "string"
+
+  User:
+    type: "object"
+    properties:
+      id:
+        type: "string"
+      role:
+        type: "string"
+      email:
+        type: "string"
+      profile:
+        $ref: "#/definitions/Profile"
+
+  Profile:
+    type: "object"
+    description: "one of these profiles according to role"
+    properties:
+      admin_profile:
+        $ref: "#/definitions/AdminProfile"
+      community_social_worker_profile:
+        $ref: "#/definitions/CommunitySocialWorkerProfile"
+      public_official_profile:
+        $ref: "#/definitions/PublicOfficialProfile"
+
+  AdminProfile:
+    type: "object"
+    properties:
+      first_name:
+        type: "string"
+      last_name:
+        type: "string"
+
+  CommunitySocialWorkerProfile:
+    type: "object"
+    properties:
+      first_name:
+        type: "string"
+      last_name:
+        type: "string"
+
+  PublicOfficialProfile:
+    type: "object"
+    properties:
+      first_name:
+        type: "string"
+      last_name:
+        type: "string"

@@ -30,13 +30,13 @@ up: build
 	docker compose up -d
 
 unit_tests: up
-	docker exec -it app pytest --cov-report term-missing --cov=. -s ./tests/unit
+	docker exec -it app pytest -vv --cov-report term-missing --cov=. -s ./tests/unit
 
 integration_tests: up
-	docker exec -it app pytest --cov-report term-missing --cov=. -s ./tests/integration
+	docker exec -it app pytest -vv --cov-report term-missing --cov=. -s ./tests/integration
 
 tests: up
-	docker exec -it app pytest --cov-report term-missing --cov=. -s ./tests
+	docker exec -it app pytest -vv --cov-report term-missing --cov=. -s ./tests
 
 deploy: build
 	docker save --output ./deploy/files/app $(APP_NAME):latest

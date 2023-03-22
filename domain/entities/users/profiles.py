@@ -12,8 +12,18 @@ class AdminProfile(BaseProfile):
 
 
 class CommunitySocialWorkerProfile(BaseProfile):
-    pass
+    @staticmethod
+    def from_create_user_request(create_user_request):
+        return CommunitySocialWorkerProfile(
+            create_user_request.first_name,
+            create_user_request.last_name
+        )
 
 
 class PublicOfficialProfile(BaseProfile):
-    pass
+    @staticmethod
+    def from_create_user_request(create_user_request):
+        return PublicOfficialProfile(
+            create_user_request.first_name,
+            create_user_request.last_name
+        )
