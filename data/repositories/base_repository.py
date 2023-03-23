@@ -9,7 +9,7 @@ from domain.entities.shared import Page
 class BaseRepository():
     def __init__(
         self, scheme, username, password, host, port, db_name, collection_name,
-        translator
+        translator, default_pipeline=None
     ):
         credentials = ""
         if username:
@@ -18,6 +18,7 @@ class BaseRepository():
         self.__client = pymongo.MongoClient(connection_url)
         self.collection = self.__client[db_name][collection_name]
         self.translator = translator
+        self.default_pipeline = default_pipeline if default_pipeline else []
 
     def __del__(self):
         self.__client.close()
@@ -47,6 +48,7 @@ class BaseRepository():
         return result[0]
 
     def _get(self, pipeline):
+        pipeline = self.default_pipeline + pipeline
         cursor = self.collection.aggregate(pipeline)
         result = [
             self.translator.from_document(document)
@@ -55,6 +57,7 @@ class BaseRepository():
         return result
 
     def _get_page(self, pipeline, page, page_size):
+        pipeline = self.default_pipeline + pipeline
         search_pipeline = [
             *pipeline,
             {"$skip": (page - 1) * page_size},

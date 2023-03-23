@@ -1,5 +1,10 @@
-from data.repositories import UsersRepository
+from data.repositories import PollsRepository, UsersRepository
 from data.translators.auth import TokensPairTranslator
+from data.translators.polls import (
+    FeedbackTranslator,
+    PollTranslator,
+    StatsTranslator
+)
 from data.translators.users import (
     AdminProfileTranslator,
     CommunitySocialWorkerProfileTranslator,
@@ -8,11 +13,13 @@ from data.translators.users import (
 )
 from data.utils.wrappers import BcryptWrapper, EnvWrapper, JWTWrapper
 from domain.use_cases.auth import LoginUseCase, LogoutUseCase, RefreshUseCase
+from domain.use_cases.polls import CreatePollUseCase
 from domain.use_cases.users import CreateUserUseCase, GetUsersPageUseCase
 from domain.utils.validation.auth import (
     LoginRequestValidationUtil,
     RefreshRequestValidationUtil
 )
+from domain.utils.validation.polls import CreatePollRequestValidationUtil
 from domain.utils.validation.users import (
     CreateUserRequestValidationUtil,
     GetUsersPageRequestValidationUtil
@@ -33,8 +40,10 @@ from presentation.handlers.auth import (
     LogoutHandler,
     RefreshHandler
 )
+from presentation.handlers.polls import CreatePollHandler
 from presentation.handlers.users import CreateUserHandler, GetUsersPageHandler
 from presentation.presenters.auth import TokensPairPresenter
+from presentation.presenters.polls import PollPresenter, StatsPresenter
 from presentation.presenters.users import (
     AdminProfilePresenter,
     CommunitySocialWorkerProfilePresenter,
@@ -46,6 +55,19 @@ from presentation.utils import PrincipalUtil
 
 
 class Structure():
+    @property
+    def polls_repository(self):
+        return PollsRepository(
+            self.env_wrapper.get("DB_SCHEME"),
+            self.env_wrapper.get("DB_USERNAME"),
+            self.env_wrapper.get("DB_PASSWORD"),
+            self.env_wrapper.get("DB_HOST"),
+            self.env_wrapper.get("DB_PORT"),
+            self.env_wrapper.get("DB_NAME"),
+            "polls",
+            self.poll_translator
+        )
+
     @property
     def users_repository(self):
         return UsersRepository(
@@ -62,6 +84,22 @@ class Structure():
     @property
     def tokens_pair_translator(self):
         return TokensPairTranslator()
+
+    @property
+    def feedback_translator(self):
+        return FeedbackTranslator()
+
+    @property
+    def poll_translator(self):
+        return PollTranslator(
+            self.user_translator,
+            self.feedback_translator,
+            self.stats_translator
+        )
+
+    @property
+    def stats_translator(self):
+        return StatsTranslator()
 
     @property
     def admin_profile_translator(self):
@@ -127,6 +165,15 @@ class Structure():
         )
 
     @property
+    def create_poll_use_case(self):
+        return CreatePollUseCase(
+            self.principal_validation_util,
+            self.rbac_validation_util,
+            self.create_poll_request_validation_util,
+            self.polls_repository
+        )
+
+    @property
     def create_user_use_case(self):
         return CreateUserUseCase(
             self.principal_validation_util,
@@ -158,6 +205,15 @@ class Structure():
         return RefreshRequestValidationUtil(
             self.presence_validator,
             self.string_type_validator
+        )
+
+    @property
+    def create_poll_request_validation_util(self):
+        return CreatePollRequestValidationUtil(
+            self.presence_validator,
+            self.string_type_validator,
+            self.int_type_validator,
+            self.list_type_validator
         )
 
     @property
@@ -242,6 +298,14 @@ class Structure():
         )
 
     @property
+    def create_poll_handler(self):
+        return CreatePollHandler(
+            self.create_poll_use_case,
+            self.poll_presenter,
+            self.principal_util
+        )
+
+    @property
     def create_user_handler(self):
         return CreateUserHandler(
             self.create_user_use_case,
@@ -260,6 +324,17 @@ class Structure():
     @property
     def tokens_pair_presenter(self):
         return TokensPairPresenter()
+
+    @property
+    def poll_presenter(self):
+        return PollPresenter(
+            self.user_presenter,
+            self.stats_presenter
+        )
+
+    @property
+    def stats_presenter(self):
+        return StatsPresenter()
 
     @property
     def admin_profile_presenter(self):
@@ -302,6 +377,10 @@ class Structure():
     @property
     def int_type_validator(self):
         return TypeValidator(int, "integer")
+
+    @property
+    def list_type_validator(self):
+        return TypeValidator(list, "array")
 
 
 structure = Structure()

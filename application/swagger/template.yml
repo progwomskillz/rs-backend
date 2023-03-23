@@ -85,3 +85,29 @@ definitions:
         type: "integer"
       page_count:
         type: "integer"
+
+  Poll:
+    type: "object"
+    properties:
+      id:
+        type: "string"
+      user:
+        $ref: "#/definitions/User"
+      community_name:
+        type: "string"
+      community_size:
+        type: "integer"
+      summary:
+        type: "array"
+        items:
+          $ref: "#/definitions/Stats"
+
+  Stats:
+    type: "object"
+    properties:
+      title:
+        type: "string"
+      count:
+        type: "integer"
+      percentage:
+        type: "integer"

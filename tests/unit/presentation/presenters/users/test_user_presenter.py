@@ -14,10 +14,13 @@ class TestUserPresenter():
 
         self.presenter = UserPresenter(self.profile_presenters)
 
+    def test_init(self):
+        assert self.presenter.profile_presenters == self.profile_presenters
+
     def test_present(self):
-        presented_profile_presenter_mock = Mock()
+        presented_profile_mock = Mock()
         self.admin_profile_presenter_mock.present.return_value =\
-            presented_profile_presenter_mock
+            presented_profile_mock
 
         user = UserFactory.admin()
         principal_mock = Mock()
@@ -28,7 +31,7 @@ class TestUserPresenter():
             "id": user.id,
             "role": user.role,
             "email": user.email,
-            "profile": presented_profile_presenter_mock
+            "profile": presented_profile_mock
         }
         self.admin_profile_presenter_mock.present.assert_called_once_with(
             user.profile,

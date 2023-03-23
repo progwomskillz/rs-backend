@@ -1,0 +1,42 @@
+tags:
+  - "Polls"
+
+parameters:
+  - in: "body"
+    name: "body"
+    required: true
+    schema:
+      type: "object"
+      properties:
+        community_name:
+          type: "string"
+          required: true
+        community_size:
+          type: "integer"
+          required: true
+        feedbacks:
+          type: "array"
+          required: true
+          items:
+            type: "object"
+            properties:
+              bothers:
+                type: "string"
+                required: true
+              age:
+                type: "integer"
+                required: true
+
+responses:
+  200:
+    schema:
+      $ref: "#/definitions/Poll"
+  400:
+    schema:
+      $ref: "#/definitions/Error"
+  401:
+    schema:
+      $ref: "#/definitions/Error"
+  403:
+    schema:
+      $ref: "#/definitions/Error"

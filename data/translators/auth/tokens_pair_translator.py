@@ -5,7 +5,7 @@ class TokensPairTranslator():
     def from_document(self, document):
         return TokensPair(
             document.get("access"),
-            document.get("refresh"),
+            document.get("refresh")
         )
 
     def to_document(self, tokens_pair):

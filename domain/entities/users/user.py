@@ -1,8 +1,5 @@
 class User():
-    def __init__(
-        self, id=None, role=None, email=None, password_hash=None,
-        tokens_pairs=None, profile=None
-    ):
+    def __init__(self, id, role, email, password_hash, tokens_pairs, profile):
         tokens_pairs = tokens_pairs if tokens_pairs else []
 
         self.id = id
