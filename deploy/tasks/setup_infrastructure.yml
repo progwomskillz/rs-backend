@@ -47,7 +47,7 @@
         state: "stopped"
     - name: "Generate certificate"
       become: yes
-      command: "certbot certonly --standalone --agree-tos --keep-until-expiring --preferred-challenges http --email {{ email }} -d {{ domain }}"
+      command: "certbot certonly --standalone --agree-tos --keep-until-expiring --preferred-challenges http --email {{ email }} -d {{ domain }} --non-interactive"
     - name: "Add cron rule to update certificate every 2 months"
       become: yes
       cron:

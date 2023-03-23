@@ -1,2 +1,2 @@
 [backend]
-IP_ADDRESS ansible_user=ubuntu ansible_private_key_file=./secrets/dev/server.pem ansible_python_interpreter=/usr/bin/python3
+44.215.90.92 ansible_user=ubuntu ansible_private_key_file=./secrets/prod/server.pem ansible_python_interpreter=/usr/bin/python3
