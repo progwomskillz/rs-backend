@@ -20,7 +20,7 @@ class TestUserTranslator():
         document = {
             "_id": "test_id",
             "role": constants.user_roles.admin,
-            "email": "test@example.com",
+            "username": "test_username",
             "password_hash": b"test_password_hash",
             "tokens_pairs": [
                 {"access": "test_access", "refresh": "test_refresh"}
@@ -36,7 +36,7 @@ class TestUserTranslator():
         assert isinstance(result, User) is True
         assert result.id == document["_id"]
         assert result.role == document["role"]
-        assert result.email == document["email"]
+        assert result.username == document["username"]
         assert result.password_hash == document["password_hash"]
         assert isinstance(result.tokens_pairs, list) is True
         assert len(result.tokens_pairs) == 1
@@ -52,7 +52,7 @@ class TestUserTranslator():
         assert result == {
             "_id": None,
             "role": user.role,
-            "email": user.email,
+            "username": user.username,
             "password_hash": user.password_hash,
             "tokens_pairs": [],
             "profile": {

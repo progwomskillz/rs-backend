@@ -33,7 +33,7 @@ class TestPollTranslator():
             "user": {
                 "_id": "test_id",
                 "role": constants.user_roles.community_social_worker,
-                "email": "test@example.com",
+                "username": "test_username",
                 "password_hash": b"test_password_hash",
                 "tokens_pairs": [
                     {"access": "test_access", "refresh": "test_refresh"}
@@ -61,7 +61,7 @@ class TestPollTranslator():
         assert isinstance(result.user, User) is True
         assert result.user.id == document["user"]["_id"]
         assert result.user.role == document["user"]["role"]
-        assert result.user.email == document["user"]["email"]
+        assert result.user.username == document["user"]["username"]
         assert result.user.password_hash == document["user"]["password_hash"]
         assert isinstance(result.user.tokens_pairs, list) is True
         assert len(result.user.tokens_pairs) ==\

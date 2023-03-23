@@ -4,7 +4,6 @@ from application.structure import structure
 from domain.entities.exceptions import InvalidRequest
 from domain.entities.users.requests import CreateUserRequest
 from domain.utils.validation.validators import (
-    EmailFormatValidator,
     EntryValidator,
     PresenceValidator,
     TypeValidator
@@ -41,10 +40,6 @@ class TestCreateUserRequestValidationUtil():
             self.roles_possible_values
         assert self.validation_util.roles_entry_validator\
             .possible_values_presentation == f"{self.roles_possible_values}"
-        assert isinstance(
-            self.validation_util.email_format_validator,
-            EmailFormatValidator
-        ) is True
 
     def test_validate_invalid(self):
         create_user_request = CreateUserRequest(
@@ -74,7 +69,7 @@ class TestCreateUserRequestValidationUtil():
                     "code": "entry"
                 }
             ],
-            "email": [
+            "username": [
                 {
                     "message": "Has to be present",
                     "code": "presence"
@@ -82,14 +77,6 @@ class TestCreateUserRequestValidationUtil():
                 {
                     "message": "Must be of type \"string\"",
                     "code": "type"
-                },
-                {
-                    "message": "Must be \"*@*\" format without any whitespaces",
-                    "code": "email_format"
-                },
-                {
-                    "message": "Must be unique",
-                    "code": "unique"
                 }
             ],
             "password": [

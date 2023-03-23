@@ -30,7 +30,7 @@ class TestUserPresenter():
         assert result == {
             "id": user.id,
             "role": user.role,
-            "email": user.email,
+            "username": user.username,
             "profile": presented_profile_mock
         }
         self.admin_profile_presenter_mock.present.assert_called_once_with(

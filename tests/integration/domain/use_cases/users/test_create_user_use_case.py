@@ -52,14 +52,14 @@ class TestCreateUserUseCase():
     def test_create_user_invalid_principal(self):
         principal = None
         role = None
-        email = None
+        username = None
         password = None
         first_name = None
         last_name = None
         create_user_request = CreateUserRequest(
             principal,
             role,
-            email,
+            username,
             password,
             first_name,
             last_name
@@ -72,14 +72,14 @@ class TestCreateUserUseCase():
         def assert_creating(user):
             principal = Principal(user, None)
             role = None
-            email = None
+            username = None
             password = None
             first_name = None
             last_name = None
             create_user_request = CreateUserRequest(
                 principal,
                 role,
-                email,
+                username,
                 password,
                 first_name,
                 last_name
@@ -102,14 +102,14 @@ class TestCreateUserUseCase():
 
         principal = Principal(user, tokens_pair)
         role = None
-        email = None
+        username = None
         password = None
         first_name = None
         last_name = None
         create_user_request = CreateUserRequest(
             principal,
             role,
-            email,
+            username,
             password,
             first_name,
             last_name
@@ -133,7 +133,7 @@ class TestCreateUserUseCase():
                     "code": "entry"
                 }
             ],
-            "email": [
+            "username": [
                 {
                     "message": "Has to be present",
                     "code": "presence"
@@ -141,14 +141,6 @@ class TestCreateUserUseCase():
                 {
                     "message": "Must be of type \"string\"",
                     "code": "type"
-                },
-                {
-                    "message": "Must be \"*@*\" format without any whitespaces",
-                    "code": "email_format"
-                },
-                {
-                    "message": "Must be unique",
-                    "code": "unique"
                 }
             ],
             "password": [
@@ -200,14 +192,14 @@ class TestCreateUserUseCase():
         }
 
         def assert_creating(role):
-            email = f"test_{role}@example.com"
+            username = f"test_{role}_username"
             password = "test_password"
             first_name = "test_first_name"
             last_name = "test_last_name"
             create_user_request = CreateUserRequest(
                 principal,
                 role,
-                email,
+                username,
                 password,
                 first_name,
                 last_name
@@ -216,7 +208,7 @@ class TestCreateUserUseCase():
             result = self.use_case.create_user(create_user_request)
 
             assert isinstance(result, User) is True
-            assert result.email == email
+            assert result.username == username
             assert structure.bcrypt_wrapper.compare(password, result.password_hash)
             assert isinstance(result.profile, profiles_classes[role]) is True
             assert result.profile.first_name == first_name

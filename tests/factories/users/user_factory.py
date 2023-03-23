@@ -10,7 +10,7 @@ class UserFactory():
         return User(
             "test_id",
             role,
-            "test@example.com",
+            "test_username",
             structure.bcrypt_wrapper.hash(UserFactory.get_password()),
             [],
             profile

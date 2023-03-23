@@ -7,6 +7,6 @@ class UserPresenter():
         return {
             "id": user.id,
             "role": user.role,
-            "email": user.email,
+            "username": user.username,
             "profile": profile_presenter.present(user.profile, principal)
         }

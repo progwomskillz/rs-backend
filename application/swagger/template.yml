@@ -34,7 +34,7 @@ definitions:
         type: "string"
       role:
         type: "string"
-      email:
+      username:
         type: "string"
       profile:
         $ref: "#/definitions/Profile"

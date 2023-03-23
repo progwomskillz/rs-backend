@@ -1,10 +1,10 @@
 class User():
-    def __init__(self, id, role, email, password_hash, tokens_pairs, profile):
+    def __init__(self, id, role, username, password_hash, tokens_pairs, profile):
         tokens_pairs = tokens_pairs if tokens_pairs else []
 
         self.id = id
         self.role = role
-        self.email = email
+        self.username = username
         self.password_hash = password_hash
         self.tokens_pairs = tokens_pairs
         self.profile = profile

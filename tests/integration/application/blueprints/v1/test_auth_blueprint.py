@@ -27,7 +27,7 @@ class TestAuthBlueprint():
 
         assert response.status_code == 400
         assert response.json == {
-            "email": [
+            "username": [
                 {
                     "message": "Has to be present",
                     "code": "presence"
@@ -35,10 +35,6 @@ class TestAuthBlueprint():
                 {
                     "message": "Must be of type \"string\"",
                     "code": "type"
-                },
-                {
-                    "message": "Must be \"*@*\" format without any whitespaces",
-                    "code": "email_format"
                 }
             ],
             "password": [
@@ -54,7 +50,7 @@ class TestAuthBlueprint():
         }
 
     def test_login_user_not_found(self):
-        body = {"email": "test@example.com", "password": "test_password"}
+        body = {"username": "test_username", "password": "test_password"}
 
         response = self.client.post(
             "/v1/auth/login",
@@ -69,7 +65,7 @@ class TestAuthBlueprint():
         user = UserFactory.admin()
         self.users_repository.create(user)
         body = {
-            "email": user.email,
+            "username": user.username,
             "password": f"{UserFactory.get_password()}_wrong"
         }
 
@@ -85,7 +81,10 @@ class TestAuthBlueprint():
     def test_login(self):
         user = UserFactory.admin()
         self.users_repository.create(user)
-        body = {"email": user.email, "password": UserFactory.get_password()}
+        body = {
+            "username": user.username,
+            "password": UserFactory.get_password()
+        }
 
         response = self.client.post(
             "/v1/auth/login",

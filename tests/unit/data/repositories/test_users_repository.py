@@ -25,39 +25,27 @@ class TestUsersRepository(RepositoryTestsConfigurator):
             self.translator_mock
         )
 
-    @patch("data.repositories.users_repository.re")
-    def test_find_by_email_not_found(self, re_mock):
-        email = "test@example.com"
-
-        escaped_mock = f"escaped_{email}"
-        re_mock.escape.return_value = escaped_mock
+    def test_find_by_username_not_found(self):
+        username = "test_username"
 
         cursor_mock = []
         self.collection_mock.aggregate.return_value = cursor_mock
 
-        result = self.repository.find_by_email(email)
+        result = self.repository.find_by_username(username)
 
         assert result is None
-        re_mock.escape.assert_called_once_with(email)
         self.collection_mock.aggregate.assert_called_once_with([
             {
                 "$match": {
-                    "email": {
-                        "$regex": f"^{escaped_mock}$",
-                        "$options": "i"
-                    }
+                    "username": username
                 }
             },
             {"$limit": 1}
         ])
         self.translator_mock.from_document.assert_not_called()
 
-    @patch("data.repositories.users_repository.re")
-    def test_find_by_email(self, re_mock):
-        email = "test@example.com"
-
-        escaped_mock = f"escaped_{email}"
-        re_mock.escape.return_value = escaped_mock
+    def test_find_by_username(self):
+        username = "test_username"
 
         document_mock = Mock()
         cursor_mock = [document_mock]
@@ -66,17 +54,13 @@ class TestUsersRepository(RepositoryTestsConfigurator):
         user = UserFactory.admin()
         self.translator_mock.from_document.return_value = user
 
-        result = self.repository.find_by_email(email)
+        result = self.repository.find_by_username(username)
 
         assert result == user
-        re_mock.escape.assert_called_once_with(email)
         self.collection_mock.aggregate.assert_called_once_with([
             {
                 "$match": {
-                    "email": {
-                        "$regex": f"^{escaped_mock}$",
-                        "$options": "i"
-                    }
+                    "username": username
                 }
             },
             {"$limit": 1}

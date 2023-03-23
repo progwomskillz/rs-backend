@@ -11,22 +11,22 @@ class TestUsersRepository():
     def teardown_method(self):
         self.repository.collection.delete_many({})
 
-    def test_find_by_email_not_found(self):
-        email = "test@wxample.com"
+    def test_find_by_username_not_found(self):
+        username = "test_username"
 
-        result = self.repository.find_by_email(email)
+        result = self.repository.find_by_username(username)
 
         assert result is None
 
-    def test_find_by_email(self):
+    def test_find_by_username(self):
         user = UserFactory.admin()
         user_id = self.repository.create(user)
         user.on_create(user_id)
 
-        result = self.repository.find_by_email(user.email)
+        result = self.repository.find_by_username(user.username)
 
         assert isinstance(result, User) is True
-        assert result.email == user.email
+        assert result.username == user.username
         assert result.id == user.id
 
     def test_get_page_by_role_not_found(self):

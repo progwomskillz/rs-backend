@@ -153,7 +153,7 @@ class TestCreatePollUseCase():
         result = self.use_case.create_poll(create_poll_request)
 
         assert isinstance(result, Poll) is True
-        assert result.user.email == user.email
+        assert result.user.username == user.username
         assert result.updated_at is None
         assert result.community_name == community_name
         assert result.community_size == community_size

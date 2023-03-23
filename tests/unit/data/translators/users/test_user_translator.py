@@ -32,7 +32,7 @@ class TestUserTranslator():
         document = {
             "_id": "test_id",
             "role": constants.user_roles.admin,
-            "email": "test@example.com",
+            "username": "test_username",
             "password_hash": b"test_password_hash",
             "tokens_pairs": [
                 {"access": "test_access_1", "refresh": "test_refresh_1"},
@@ -60,7 +60,7 @@ class TestUserTranslator():
         assert isinstance(result, User) is True
         assert result.id == document["_id"]
         assert result.role == document["role"]
-        assert result.email == document["email"]
+        assert result.username == document["username"]
         assert result.password_hash == document["password_hash"]
         assert result.tokens_pairs == tokens_pairs_mock
 
@@ -95,7 +95,7 @@ class TestUserTranslator():
         assert result == {
             "_id": None,
             "role": user.role,
-            "email": user.email,
+            "username": user.username,
             "password_hash": user.password_hash,
             "tokens_pairs": [tokens_pair_document_mock],
             "profile": profile_mock
@@ -115,7 +115,7 @@ class TestUserTranslator():
         document = {
             "_id": "test_id",
             "role": constants.user_roles.community_social_worker,
-            "email": "test@example.com",
+            "username": "test_username",
             "password_hash": b"test_password_hash",
             "tokens_pairs": [
                 {"access": "test_access_1", "refresh": "test_refresh_1"},
@@ -144,7 +144,7 @@ class TestUserTranslator():
         assert isinstance(result, User) is True
         assert result.id == document["_id"]
         assert result.role == document["role"]
-        assert result.email == document["email"]
+        assert result.username == document["username"]
         assert result.password_hash == document["password_hash"]
         assert result.tokens_pairs == tokens_pairs_mock
 
@@ -178,7 +178,7 @@ class TestUserTranslator():
         assert result == {
             "_id": None,
             "role": user.role,
-            "email": user.email,
+            "username": user.username,
             "password_hash": user.password_hash,
             "tokens_pairs": [tokens_pair_document_mock],
             "profile": profile_mock
@@ -196,7 +196,7 @@ class TestUserTranslator():
         document = {
             "_id": "test_id",
             "role": constants.user_roles.public_official,
-            "email": "test@example.com",
+            "username": "test_username",
             "password_hash": b"test_password_hash",
             "tokens_pairs": [
                 {"access": "test_access_1", "refresh": "test_refresh_1"},
@@ -225,7 +225,7 @@ class TestUserTranslator():
         assert isinstance(result, User) is True
         assert result.id == document["_id"]
         assert result.role == document["role"]
-        assert result.email == document["email"]
+        assert result.username == document["username"]
         assert result.password_hash == document["password_hash"]
         assert result.tokens_pairs == tokens_pairs_mock
 
@@ -259,7 +259,7 @@ class TestUserTranslator():
         assert result == {
             "_id": None,
             "role": user.role,
-            "email": user.email,
+            "username": user.username,
             "password_hash": user.password_hash,
             "tokens_pairs": [tokens_pair_document_mock],
             "profile": profile_mock

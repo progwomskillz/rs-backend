@@ -44,7 +44,7 @@ class TestLoginUseCase():
             self.use_case.login(login_request)
 
         assert e.value.errors == {
-            "email": [
+            "username": [
                 {
                     "message": "Has to be present",
                     "code": "presence"
@@ -52,10 +52,6 @@ class TestLoginUseCase():
                 {
                     "message": "Must be of type \"string\"",
                     "code": "type"
-                },
-                {
-                    "message": "Must be \"*@*\" format without any whitespaces",
-                    "code": "email_format"
                 }
             ],
             "password": [
@@ -80,7 +76,7 @@ class TestLoginUseCase():
         user = UserFactory.admin()
         self.users_repository.create(user)
 
-        login_request = LoginRequest(user.email, "test_wrong_password")
+        login_request = LoginRequest(user.username, "test_wrong_password")
 
         with pytest.raises(UnauthenticatedException):
             self.use_case.login(login_request)
@@ -90,7 +86,7 @@ class TestLoginUseCase():
         user_id = self.users_repository.create(user)
         user.on_create(user_id)
 
-        login_request = LoginRequest(user.email, UserFactory.get_password())
+        login_request = LoginRequest(user.username, UserFactory.get_password())
 
         result = self.use_case.login(login_request)
 

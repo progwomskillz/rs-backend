@@ -28,7 +28,7 @@ class TestLoginUseCase():
 
     def test_login_invalid_request(self):
         login_request_mock = Mock()
-        login_request_mock.email = None
+        login_request_mock.username = None
         login_request_mock.password = None
 
         validation_errors = {}
@@ -44,17 +44,17 @@ class TestLoginUseCase():
         self.login_request_validation_util_mock.validate.assert_called_once_with(
             login_request_mock
         )
-        self.users_repository_mock.find_by_email.assert_not_called()
+        self.users_repository_mock.find_by_username.assert_not_called()
         self.password_util_mock.compare.assert_not_called()
         self.tokens_util_mock.create_pair.assert_not_called()
         self.users_repository_mock.update.assert_not_called()
 
     def test_login_user_not_found(self):
         login_request_mock = Mock()
-        login_request_mock.email = "test@example.com"
+        login_request_mock.username = "test_username"
         login_request_mock.password = "test_password"
 
-        self.users_repository_mock.find_by_email.return_value = None
+        self.users_repository_mock.find_by_username.return_value = None
 
         with pytest.raises(UnauthenticatedException):
             self.use_case.login(login_request_mock)
@@ -62,8 +62,8 @@ class TestLoginUseCase():
         self.login_request_validation_util_mock.validate.assert_called_once_with(
             login_request_mock
         )
-        self.users_repository_mock.find_by_email.assert_called_once_with(
-            login_request_mock.email
+        self.users_repository_mock.find_by_username.assert_called_once_with(
+            login_request_mock.username
         )
         self.password_util_mock.compare.assert_not_called()
         self.tokens_util_mock.create_pair.assert_not_called()
@@ -71,12 +71,12 @@ class TestLoginUseCase():
 
     def test_login_user_wrong_password(self):
         login_request_mock = Mock()
-        login_request_mock.email = "test@example.com"
+        login_request_mock.username = "test_username"
         login_request_mock.password = "test_password"
 
         user_mock = Mock()
         user_mock.password_hash = b"test_password_hash"
-        self.users_repository_mock.find_by_email.return_value = user_mock
+        self.users_repository_mock.find_by_username.return_value = user_mock
         self.password_util_mock.compare.return_value = False
 
         with pytest.raises(UnauthenticatedException):
@@ -85,8 +85,8 @@ class TestLoginUseCase():
         self.login_request_validation_util_mock.validate.assert_called_once_with(
             login_request_mock
         )
-        self.users_repository_mock.find_by_email.assert_called_once_with(
-            login_request_mock.email
+        self.users_repository_mock.find_by_username.assert_called_once_with(
+            login_request_mock.username
         )
         self.password_util_mock.compare.assert_called_once_with(
             login_request_mock.password,
@@ -98,14 +98,14 @@ class TestLoginUseCase():
     @patch("domain.use_cases.auth.login_use_case.TokensPayload")
     def test_login(self, TokensPayload_mock):
         login_request_mock = Mock()
-        login_request_mock.email = "test@example.com"
+        login_request_mock.username = "test_username"
         login_request_mock.password = "test_password"
 
         user_mock = Mock()
         user_mock.password_hash = b"test_password_hash"
         user_mock.id = "test_id"
         user_mock.role = "test_role"
-        self.users_repository_mock.find_by_email.return_value = user_mock
+        self.users_repository_mock.find_by_username.return_value = user_mock
         self.password_util_mock.compare.return_value = True
         tokens_payload_mock = Mock()
         TokensPayload_mock.return_value = tokens_payload_mock
@@ -118,8 +118,8 @@ class TestLoginUseCase():
         self.login_request_validation_util_mock.validate.assert_called_once_with(
             login_request_mock
         )
-        self.users_repository_mock.find_by_email.assert_called_once_with(
-            login_request_mock.email
+        self.users_repository_mock.find_by_username.assert_called_once_with(
+            login_request_mock.username
         )
         self.password_util_mock.compare.assert_called_once_with(
             login_request_mock.password,

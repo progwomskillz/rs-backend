@@ -24,13 +24,13 @@ class TestCreateUserHandler():
         principal_mock = Mock()
         request_mock.principal = principal_mock
         role = "test_role"
-        email = "test@example.com"
+        username = "test_username"
         password = "test_password"
         first_name = "test_first_name"
         last_name = "test_last_name"
         request_mock.json = {
             "role": role,
-            "email": email,
+            "username": username,
             "password": password,
             "first_name": first_name,
             "last_name": last_name
@@ -45,7 +45,7 @@ class TestCreateUserHandler():
         CreateUserRequest_mock.assert_called_once_with(
             principal_mock,
             role,
-            email,
+            username,
             password,
             first_name,
             last_name

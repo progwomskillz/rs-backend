@@ -4,14 +4,11 @@ from .base_repository import BaseRepository
 
 
 class UsersRepository(BaseRepository):
-    def find_by_email(self, email):
+    def find_by_username(self, username):
         pipeline = [
             {
                 "$match": {
-                    "email": {
-                        "$regex": f"^{re.escape(email)}$",
-                        "$options": "i"
-                    }
+                    "username": username
                 }
             }
         ]

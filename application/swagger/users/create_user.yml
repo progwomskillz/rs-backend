@@ -11,7 +11,7 @@ parameters:
         role:
           type: "string"
           required: true
-        email:
+        username:
           type: "string"
           required: true
         password:

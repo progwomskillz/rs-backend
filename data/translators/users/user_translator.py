@@ -13,7 +13,7 @@ class UserTranslator():
         return User(
             str(document.get("_id")),
             document.get("role"),
-            document.get("email"),
+            document.get("username"),
             document.get("password_hash"),
             [
                 self.tokens_pair_translator.from_document(tokens_pair_document)
@@ -27,7 +27,7 @@ class UserTranslator():
         return {
             "_id": ObjectId(user.id) if ObjectId.is_valid(user.id) else None,
             "role": user.role,
-            "email": user.email,
+            "username": user.username,
             "password_hash": user.password_hash,
             "tokens_pairs": [
                 self.tokens_pair_translator.to_document(tokens_pair)

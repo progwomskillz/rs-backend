@@ -16,9 +16,9 @@ class TestLoginHandler():
         LoginRequest_mock.return_value = login_request_mock
 
         json_mock = Mock()
-        email = "test@example.com"
+        username = "test_username"
         password = "test_password"
-        json_mock.get.side_effect = [email, password]
+        json_mock.get.side_effect = [username, password]
         request_mock = Mock()
         request_mock.json = json_mock
 
@@ -29,7 +29,7 @@ class TestLoginHandler():
 
         assert result == expected_result_mock
         assert json_mock.get.call_count == 2
-        json_mock.get.assert_any_call("email")
+        json_mock.get.assert_any_call("username")
         json_mock.get.assert_any_call("password")
-        LoginRequest_mock.assert_called_once_with(email, password)
+        LoginRequest_mock.assert_called_once_with(username, password)
         self.use_case_mock.login.assert_called_once_with(login_request_mock)

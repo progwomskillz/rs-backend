@@ -7,7 +7,7 @@ class TestUser():
     def setup_method(self):
         self.id = "test_id"
         self.role = "test_role"
-        self.email = "test@example.com"
+        self.username = "test_username"
         self.password_hash = b"test_password_hash"
         self.tokens_pairs = []
         self.profile_mock = Mock()
@@ -15,7 +15,7 @@ class TestUser():
         self.entity = User(
             self.id,
             self.role,
-            self.email,
+            self.username,
             self.password_hash,
             self.tokens_pairs,
             self.profile_mock
@@ -24,7 +24,7 @@ class TestUser():
     def test_init(self):
         assert self.entity.id == self.id
         assert self.entity.role == self.role
-        assert self.entity.email == self.email
+        assert self.entity.username == self.username
         assert self.entity.password_hash == self.password_hash
         assert self.entity.tokens_pairs == self.tokens_pairs
         assert self.entity.profile == self.profile_mock

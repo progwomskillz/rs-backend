@@ -114,7 +114,7 @@ class TestCreateUserUseCase():
         create_user_request_mock = Mock()
         create_user_request_mock.role = constants.user_roles\
             .community_social_worker
-        create_user_request_mock.email = "test@example.com"
+        create_user_request_mock.username = "test_username"
         create_user_request_mock.password = "test_password"
         create_user_request_mock.first_name = "test_first_name"
         create_user_request_mock.last_name = "test_last_name"
@@ -155,7 +155,7 @@ class TestCreateUserUseCase():
         User_mock.assert_called_once_with(
             None,
             create_user_request_mock.role,
-            create_user_request_mock.email,
+            create_user_request_mock.username,
             password_hash,
             None,
             community_social_worker_profile_mock

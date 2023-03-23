@@ -11,7 +11,7 @@ from domain.utils import constants
 
 
 role = ""
-email = ""
+username = ""
 password = ""
 first_name = ""
 last_name = ""
@@ -43,7 +43,7 @@ profile = profile_constructor["class"](*profile_constructor["args"])
 user = User(
     None,
     role,
-    email,
+    username,
     structure.bcrypt_wrapper.hash(password),
     [],
     profile

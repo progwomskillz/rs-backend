@@ -27,7 +27,7 @@ class CreateUserUseCase():
         user = User(
             None,
             create_user_request.role,
-            create_user_request.email,
+            create_user_request.username,
             self.password_util.hash(create_user_request.password),
             None,
             self.__create_profile(create_user_request)

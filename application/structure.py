@@ -25,7 +25,6 @@ from domain.utils.validation.users import (
     GetUsersPageRequestValidationUtil
 )
 from domain.utils.validation.validators import (
-    EmailFormatValidator,
     EntryValidator,
     PresenceValidator,
     TypeValidator
@@ -196,8 +195,7 @@ class Structure():
     def login_request_validation_util(self):
         return LoginRequestValidationUtil(
             self.presence_validator,
-            self.string_type_validator,
-            self.email_format_validator
+            self.string_type_validator
         )
 
     @property
@@ -230,7 +228,6 @@ class Structure():
             self.presence_validator,
             self.string_type_validator,
             roles_entry_validator,
-            self.email_format_validator,
             self.users_repository
         )
 
@@ -261,10 +258,6 @@ class Structure():
             roles_entry_validators,
             self.int_type_validator
         )
-
-    @property
-    def email_format_validator(self):
-        return EmailFormatValidator()
 
     @property
     def presence_validator(self):

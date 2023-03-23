@@ -15,7 +15,7 @@ class LoginUseCase():
     def login(self, login_request):
         self.login_request_validation_util.validate(login_request)
 
-        user = self.users_repository.find_by_email(login_request.email)
+        user = self.users_repository.find_by_username(login_request.username)
 
         if not user:
             raise UnauthenticatedException()

@@ -5,8 +5,7 @@ from domain.entities.auth.requests import LoginRequest
 from domain.entities.exceptions import InvalidRequest
 from domain.utils.validation.validators import (
     PresenceValidator,
-    TypeValidator,
-    EmailFormatValidator
+    TypeValidator
 )
 
 
@@ -26,10 +25,6 @@ class TestLoginRequestValidationUtil():
         assert self.validation_util.string_type_validator.type == str
         assert self.validation_util.string_type_validator.string_type_presentation\
             == "string"
-        assert isinstance(
-            self.validation_util.email_format_validator,
-            EmailFormatValidator
-        ) is True
 
     def test_validate_invalid(self):
         login_request = LoginRequest(None, None)
@@ -38,7 +33,7 @@ class TestLoginRequestValidationUtil():
             self.validation_util.validate(login_request)
 
         assert e.value.errors == {
-            "email": [
+            "username": [
                 {
                     "message": "Has to be present",
                     "code": "presence"
@@ -46,10 +41,6 @@ class TestLoginRequestValidationUtil():
                 {
                     "message": "Must be of type \"string\"",
                     "code": "type"
-                },
-                {
-                    "message": "Must be \"*@*\" format without any whitespaces",
-                    "code": "email_format"
                 }
             ],
             "password": [

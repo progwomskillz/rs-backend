@@ -67,7 +67,7 @@ class TestUsersBlueprint():
                     "code": "entry"
                 }
             ],
-            "email": [
+            "username": [
                 {
                     "message": "Has to be present",
                     "code": "presence"
@@ -75,14 +75,6 @@ class TestUsersBlueprint():
                 {
                     "message": "Must be of type \"string\"",
                     "code": "type"
-                },
-                {
-                    "message": "Must be \"*@*\" format without any whitespaces",
-                    "code": "email_format"
-                },
-                {
-                    "message": "Must be unique",
-                    "code": "unique"
                 }
             ],
             "password": [
@@ -128,7 +120,7 @@ class TestUsersBlueprint():
 
         body = {
             "role": constants.user_roles.community_social_worker,
-            "email": f"test_{constants.user_roles.community_social_worker}@example.com",
+            "username": f"test_{constants.user_roles.community_social_worker}_username",
             "password": "test_password",
             "first_name": "test_first_name",
             "last_name": "test_last_name"
@@ -146,7 +138,7 @@ class TestUsersBlueprint():
 
         assert response.status_code == 200
         assert response.json["role"] == body["role"]
-        assert response.json["email"] == body["email"]
+        assert response.json["username"] == body["username"]
         assert response.json["profile"]["first_name"] == body["first_name"]
         assert response.json["profile"]["last_name"] == body["last_name"]
 

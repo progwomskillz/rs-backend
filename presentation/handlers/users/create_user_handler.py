@@ -7,7 +7,7 @@ class CreateUserHandler(AuthBaseHandler):
         create_user_request = CreateUserRequest(
             request.principal,
             request.json.get("role"),
-            request.json.get("email"),
+            request.json.get("username"),
             request.json.get("password"),
             request.json.get("first_name"),
             request.json.get("last_name")
