@@ -23,7 +23,7 @@ class CreatePollHandler(AuthBaseHandler):
         create_poll_request = CreatePollRequest(
             request.principal,
             request.form.get("community_name"),
-            request.form.get("community_size"),
+            TypesHelper.try_to_int(request.form.get("community_size")),
             [
                 Feedback(feedback.get("bothers"), feedback.get("age"))
                 for feedback in feedbacks
