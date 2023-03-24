@@ -1,1 +1,2 @@
 from .create_revise_request_use_case import CreateReviseRequestUseCase
+from .get_revise_requests_page_use_case import GetReviseRequestsPageUseCase

@@ -16,3 +16,9 @@ base_swagger_path = "./../../swagger/revise_requests"
 @swag_from(f"{base_swagger_path}/create_revise_request.yml")
 def create_revise_request():
     return structure.create_revise_request_handler.handle(request)
+
+
+@revise_requests_blueprint.route("", methods=["GET"])
+@swag_from(f"{base_swagger_path}/get_revise_requests_page.yml")
+def get_revise_requests_page():
+    return structure.get_revise_requests_page_handler.handle(request)

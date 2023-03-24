@@ -23,7 +23,10 @@ from domain.use_cases.polls import (
     GetPollsPageUseCase,
     GetPollsSummaryUseCase
 )
-from domain.use_cases.revise_requests import CreateReviseRequestUseCase
+from domain.use_cases.revise_requests import (
+    CreateReviseRequestUseCase,
+    GetReviseRequestsPageUseCase
+)
 from domain.use_cases.users import CreateUserUseCase, GetUsersPageUseCase
 from domain.utils.validation.auth import (
     LoginRequestValidationUtil,
@@ -34,7 +37,8 @@ from domain.utils.validation.polls import (
     GetPollsPageRequestValidationUtil
 )
 from domain.utils.validation.revise_requests import (
-    CreateReviseRequestRequestValidationUtil
+    CreateReviseRequestRequestValidationUtil,
+    GetReviseRequestsPageRequestValidationUtil
 )
 from domain.utils.validation.users import (
     CreateUserRequestValidationUtil,
@@ -60,7 +64,10 @@ from presentation.handlers.polls import (
     GetPollsPageHandler,
     GetPollsSummaryHandler
 )
-from presentation.handlers.revise_requests import CreateReviseRequestHandler
+from presentation.handlers.revise_requests import (
+    CreateReviseRequestHandler,
+    GetReviseRequestsPageHandler
+)
 from presentation.handlers.users import CreateUserHandler, GetUsersPageHandler
 from presentation.presenters.auth import TokensPairPresenter
 from presentation.presenters.polls import PollPresenter, StatsPresenter
@@ -243,6 +250,15 @@ class Structure():
         )
 
     @property
+    def get_revise_requests_page_use_case(self):
+        return GetReviseRequestsPageUseCase(
+            self.principal_validation_util,
+            self.rbac_validation_util,
+            self.get_revise_requests_page_request_validation_util,
+            self.revise_requests_repository
+        )
+
+    @property
     def create_user_use_case(self):
         return CreateUserUseCase(
             self.principal_validation_util,
@@ -296,6 +312,13 @@ class Structure():
         return CreateReviseRequestRequestValidationUtil(
             self.presence_validator,
             self.string_type_validator
+        )
+
+    @property
+    def get_revise_requests_page_request_validation_util(self):
+        return GetReviseRequestsPageRequestValidationUtil(
+            self.presence_validator,
+            self.int_type_validator
         )
 
     @property
@@ -407,6 +430,14 @@ class Structure():
         )
 
     @property
+    def get_revise_requests_page_handler(self):
+        return GetReviseRequestsPageHandler(
+            self.get_revise_requests_page_use_case,
+            self.revise_requests_page_presenter,
+            self.principal_util
+        )
+
+    @property
     def create_user_handler(self):
         return CreateUserHandler(
             self.create_user_use_case,
@@ -445,6 +476,10 @@ class Structure():
     @property
     def revise_request_presenter(self):
         return ReviseRequestPresenter(self.poll_presenter)
+
+    @property
+    def revise_requests_page_presenter(self):
+        return PagePresenter(self.revise_request_presenter)
 
     @property
     def admin_profile_presenter(self):

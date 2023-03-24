@@ -129,3 +129,15 @@ definitions:
         type: "string"
       poll:
         $ref: "#/definitions/Poll"
+
+  ReviseRequestsPage:
+    type: "object"
+    properties:
+      items:
+        type: "array"
+        items:
+          $ref: "#/definitions/ReviseRequest"
+      page:
+        type: "integer"
+      page_count:
+        type: "integer"
