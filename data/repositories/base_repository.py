@@ -18,7 +18,10 @@ class BaseRepository():
         self.__client = pymongo.MongoClient(connection_url)
         self.collection = self.__client[db_name][collection_name]
         self.translator = translator
-        self.default_pipeline = default_pipeline if default_pipeline else []
+        self.default_pipeline = [
+            {"$sort": {"_id": -1}},
+            *(default_pipeline if default_pipeline else [])
+        ]
 
     def __del__(self):
         self.__client.close()

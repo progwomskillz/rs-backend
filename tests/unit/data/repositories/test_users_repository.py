@@ -35,6 +35,7 @@ class TestUsersRepository(RepositoryTestsConfigurator):
 
         assert result is None
         self.collection_mock.aggregate.assert_called_once_with([
+            {"$sort": {"_id": -1}},
             {
                 "$match": {
                     "username": username
@@ -58,6 +59,7 @@ class TestUsersRepository(RepositoryTestsConfigurator):
 
         assert result == user
         self.collection_mock.aggregate.assert_called_once_with([
+            {"$sort": {"_id": -1}},
             {
                 "$match": {
                     "username": username
@@ -88,12 +90,14 @@ class TestUsersRepository(RepositoryTestsConfigurator):
         assert result.page == page
         assert result.page_count == 1
         self.collection_mock.aggregate.assert_any_call([
+            {"$sort": {"_id": -1}},
             {"$match": {"role": role}},
             {"$skip": (page - 1) * page_size},
             {"$limit": page_size}
         ])
         self.translator_mock.from_document.assert_not_called()
         self.collection_mock.aggregate.assert_any_call([
+            {"$sort": {"_id": -1}},
             {"$match": {"role": role}},
             {"$count": "count"}
         ])
@@ -122,6 +126,7 @@ class TestUsersRepository(RepositoryTestsConfigurator):
         assert result.page == page
         assert result.page_count == 2
         self.collection_mock.aggregate.assert_any_call([
+            {"$sort": {"_id": -1}},
             {"$match": {"role": role}},
             {"$skip": (page - 1) * page_size},
             {"$limit": page_size}
@@ -130,6 +135,7 @@ class TestUsersRepository(RepositoryTestsConfigurator):
             document_mock
         )
         self.collection_mock.aggregate.assert_any_call([
+            {"$sort": {"_id": -1}},
             {"$match": {"role": role}},
             {"$count": "count"}
         ])

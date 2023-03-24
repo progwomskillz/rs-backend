@@ -72,6 +72,7 @@ class TestBaseRepository(RepositoryTestsConfigurator):
         ObjectId_mock.is_valid.assert_called_once_with(id)
         ObjectId_mock.assert_called_once_with(id)
         self.collection_mock.aggregate.assert_called_once_with([
+            {"$sort": {"_id": -1}},
             {"$match": {"_id": id_mock}},
             {"$limit": 1}
         ])
@@ -95,6 +96,7 @@ class TestBaseRepository(RepositoryTestsConfigurator):
         ObjectId_mock.is_valid.assert_called_once_with(id)
         ObjectId_mock.assert_called_once_with(id)
         self.collection_mock.aggregate.assert_called_once_with([
+            {"$sort": {"_id": -1}},
             {"$match": {"_id": id_mock}},
             {"$limit": 1}
         ])
