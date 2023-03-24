@@ -1,5 +1,8 @@
+from bson import ObjectId
+
 from application.structure import structure
 from domain.entities.polls import Poll
+from domain.entities.shared import Page
 from tests.factories.polls import FeedbackFactory, PollFactory
 from tests.factories.users import UserFactory
 
@@ -63,3 +66,59 @@ class TestPollsRepository():
         assert result.summary[2].title == "unknown"
         assert result.summary[2].count == 4
         assert result.summary[2].percentage == 40
+
+    def test_get_page_user_id(self):
+        user = UserFactory.community_social_worker()
+        user.id = str(ObjectId())
+        user.on_create(self.users_repository.create(user))
+
+        page = 1
+        page_size = 10
+
+        for _ in range(page * page_size + 1):
+            poll = PollFactory.generic()
+            poll.user = user
+            self.repository.create(poll)
+
+        for _ in range(page * page_size + 1):
+            temp_user = UserFactory.community_social_worker()
+            temp_user.id = str(ObjectId())
+            temp_user.on_create(self.users_repository.create(temp_user))
+            poll = PollFactory.generic()
+            poll.user = temp_user
+            self.repository.create(poll)
+
+        result = self.repository.get_page(user.id, page, page_size)
+
+        assert isinstance(result, Page) is True
+        assert len(result.items) == page_size
+        assert result.page == page
+        assert result.page_count == page + 1
+
+    def test_get_page(self):
+        user = UserFactory.community_social_worker()
+        user.id = str(ObjectId())
+        user.on_create(self.users_repository.create(user))
+
+        page = 1
+        page_size = 10
+
+        for _ in range(page * page_size + 1):
+            poll = PollFactory.generic()
+            poll.user = user
+            self.repository.create(poll)
+
+        for _ in range(page * page_size + 1):
+            temp_user = UserFactory.community_social_worker()
+            temp_user.id = str(ObjectId())
+            temp_user.on_create(self.users_repository.create(temp_user))
+            poll = PollFactory.generic()
+            poll.user = temp_user
+            self.repository.create(poll)
+
+        result = self.repository.get_page(None, page, page_size)
+
+        assert isinstance(result, Page) is True
+        assert len(result.items) == page_size
+        assert result.page == page
+        assert result.page_count == page * 2 + 1

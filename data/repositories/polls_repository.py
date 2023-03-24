@@ -132,6 +132,14 @@ class PollsRepository(BaseRepository):
             translator, default_pipeline
         )
 
+    def get_page(self, user_id, page, page_size):
+        pipeline = []
+        if user_id:
+            pipeline.append(
+                {"$match": {"user._id": self._to_object_id(user_id)}}
+            )
+        return self._get_page(pipeline, page, page_size)
+
     def __generate_tag_search_pipeline(self, tag, age, age_cond):
         return {
             "$and": [

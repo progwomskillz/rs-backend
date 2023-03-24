@@ -13,13 +13,16 @@ from data.translators.users import (
 )
 from data.utils.wrappers import BcryptWrapper, EnvWrapper, JWTWrapper
 from domain.use_cases.auth import LoginUseCase, LogoutUseCase, RefreshUseCase
-from domain.use_cases.polls import CreatePollUseCase
+from domain.use_cases.polls import CreatePollUseCase, GetPollsPageUseCase
 from domain.use_cases.users import CreateUserUseCase, GetUsersPageUseCase
 from domain.utils.validation.auth import (
     LoginRequestValidationUtil,
     RefreshRequestValidationUtil
 )
-from domain.utils.validation.polls import CreatePollRequestValidationUtil
+from domain.utils.validation.polls import (
+    CreatePollRequestValidationUtil,
+    GetPollsPageRequestValidationUtil
+)
 from domain.utils.validation.users import (
     CreateUserRequestValidationUtil,
     GetUsersPageRequestValidationUtil
@@ -39,7 +42,7 @@ from presentation.handlers.auth import (
     LogoutHandler,
     RefreshHandler
 )
-from presentation.handlers.polls import CreatePollHandler
+from presentation.handlers.polls import CreatePollHandler, GetPollsPageHandler
 from presentation.handlers.users import CreateUserHandler, GetUsersPageHandler
 from presentation.presenters.auth import TokensPairPresenter
 from presentation.presenters.polls import PollPresenter, StatsPresenter
@@ -173,6 +176,15 @@ class Structure():
         )
 
     @property
+    def get_polls_page_use_case(self):
+        return GetPollsPageUseCase(
+            self.principal_validation_util,
+            self.rbac_validation_util,
+            self.get_polls_page_request_validation_util,
+            self.polls_repository
+        )
+
+    @property
     def create_user_use_case(self):
         return CreateUserUseCase(
             self.principal_validation_util,
@@ -212,6 +224,14 @@ class Structure():
             self.string_type_validator,
             self.int_type_validator,
             self.list_type_validator
+        )
+
+    @property
+    def get_polls_page_request_validation_util(self):
+        return GetPollsPageRequestValidationUtil(
+            self.presence_validator,
+            self.string_type_validator,
+            self.int_type_validator
         )
 
     @property
@@ -299,6 +319,14 @@ class Structure():
         )
 
     @property
+    def get_polls_page_handler(self):
+        return GetPollsPageHandler(
+            self.get_polls_page_use_case,
+            self.polls_page_presenter,
+            self.principal_util
+        )
+
+    @property
     def create_user_handler(self):
         return CreateUserHandler(
             self.create_user_use_case,
@@ -324,6 +352,10 @@ class Structure():
             self.user_presenter,
             self.stats_presenter
         )
+
+    @property
+    def polls_page_presenter(self):
+        return PagePresenter(self.poll_presenter)
 
     @property
     def stats_presenter(self):

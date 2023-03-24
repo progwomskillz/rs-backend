@@ -1,1 +1,2 @@
 from .create_poll_use_case import CreatePollUseCase
+from .get_polls_page_use_case import GetPollsPageUseCase

@@ -24,9 +24,10 @@ class BaseRepository():
         self.__client.close()
 
     def find_by_id(self, id):
-        if not ObjectId.is_valid(id):
+        id = self._to_object_id(id)
+        if not id:
             return None
-        pipeline = [{"$match": {"_id": ObjectId(id)}}]
+        pipeline = [{"$match": {"_id": id}}]
         return self._find(pipeline)
 
     def update(self, model):
@@ -34,7 +35,7 @@ class BaseRepository():
         self.collection.update_one({"_id": document["_id"]}, {"$set": document})
 
     def delete(self, model):
-        self.collection.delete_one({"_id": ObjectId(model.id)})
+        self.collection.delete_one({"_id": self._to_object_id(model.id)})
 
     def create(self, model):
         document = self.translator.to_document(model)
@@ -79,3 +80,8 @@ class BaseRepository():
         if page_count == 0:
             page_count = 1
         return Page(items, page, page_count)
+
+    def _to_object_id(self, id):
+        if not ObjectId.is_valid(id):
+            return None
+        return ObjectId(id)
