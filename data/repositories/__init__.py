@@ -1,2 +1,3 @@
 from .polls_repository import PollsRepository
+from .revise_requests_repository import ReviseRequestsRepository
 from .users_repository import UsersRepository

@@ -1,10 +1,15 @@
-from data.repositories import PollsRepository, UsersRepository
+from data.repositories import (
+    PollsRepository,
+    ReviseRequestsRepository,
+    UsersRepository
+)
 from data.translators.auth import TokensPairTranslator
 from data.translators.polls import (
     FeedbackTranslator,
     PollTranslator,
     StatsTranslator
 )
+from data.translators.revise_requests import ReviseRequestTranslator
 from data.translators.users import (
     AdminProfileTranslator,
     CommunitySocialWorkerProfileTranslator,
@@ -18,6 +23,7 @@ from domain.use_cases.polls import (
     GetPollsPageUseCase,
     GetPollsSummaryUseCase
 )
+from domain.use_cases.revise_requests import CreateReviseRequestUseCase
 from domain.use_cases.users import CreateUserUseCase, GetUsersPageUseCase
 from domain.utils.validation.auth import (
     LoginRequestValidationUtil,
@@ -26,6 +32,9 @@ from domain.utils.validation.auth import (
 from domain.utils.validation.polls import (
     CreatePollRequestValidationUtil,
     GetPollsPageRequestValidationUtil
+)
+from domain.utils.validation.revise_requests import (
+    CreateReviseRequestRequestValidationUtil
 )
 from domain.utils.validation.users import (
     CreateUserRequestValidationUtil,
@@ -51,9 +60,11 @@ from presentation.handlers.polls import (
     GetPollsPageHandler,
     GetPollsSummaryHandler
 )
+from presentation.handlers.revise_requests import CreateReviseRequestHandler
 from presentation.handlers.users import CreateUserHandler, GetUsersPageHandler
 from presentation.presenters.auth import TokensPairPresenter
 from presentation.presenters.polls import PollPresenter, StatsPresenter
+from presentation.presenters.revise_requests import ReviseRequestPresenter
 from presentation.presenters.users import (
     AdminProfilePresenter,
     CommunitySocialWorkerProfilePresenter,
@@ -77,6 +88,19 @@ class Structure():
             "polls",
             self.poll_translator,
             self.stats_translator
+        )
+
+    @property
+    def revise_requests_repository(self):
+        return ReviseRequestsRepository(
+            self.env_wrapper.get("DB_SCHEME"),
+            self.env_wrapper.get("DB_USERNAME"),
+            self.env_wrapper.get("DB_PASSWORD"),
+            self.env_wrapper.get("DB_HOST"),
+            self.env_wrapper.get("DB_PORT"),
+            self.env_wrapper.get("DB_NAME"),
+            "revise_requests",
+            self.revise_request_translator
         )
 
     @property
@@ -111,6 +135,13 @@ class Structure():
     @property
     def stats_translator(self):
         return StatsTranslator()
+
+    @property
+    def revise_request_translator(self):
+        return ReviseRequestTranslator(
+            self.user_translator,
+            self.poll_translator
+        )
 
     @property
     def admin_profile_translator(self):
@@ -202,6 +233,16 @@ class Structure():
         )
 
     @property
+    def create_revise_request_use_case(self):
+        return CreateReviseRequestUseCase(
+            self.principal_validation_util,
+            self.rbac_validation_util,
+            self.create_revise_request_request_validation_util,
+            self.revise_requests_repository,
+            self.polls_repository
+        )
+
+    @property
     def create_user_use_case(self):
         return CreateUserUseCase(
             self.principal_validation_util,
@@ -248,6 +289,13 @@ class Structure():
         return GetPollsPageRequestValidationUtil(
             self.presence_validator,
             self.int_type_validator
+        )
+
+    @property
+    def create_revise_request_request_validation_util(self):
+        return CreateReviseRequestRequestValidationUtil(
+            self.presence_validator,
+            self.string_type_validator
         )
 
     @property
@@ -351,6 +399,14 @@ class Structure():
         )
 
     @property
+    def create_revise_request_handler(self):
+        return CreateReviseRequestHandler(
+            self.create_revise_request_use_case,
+            self.revise_request_presenter,
+            self.principal_util
+        )
+
+    @property
     def create_user_handler(self):
         return CreateUserHandler(
             self.create_user_use_case,
@@ -385,6 +441,10 @@ class Structure():
     @property
     def stats_list_presenter(self):
         return ListPresenter(self.stats_presenter)
+
+    @property
+    def revise_request_presenter(self):
+        return ReviseRequestPresenter(self.poll_presenter)
 
     @property
     def admin_profile_presenter(self):

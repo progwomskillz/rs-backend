@@ -1,6 +1,5 @@
-import re
-
 from .base_repository import BaseRepository
+from data.utils.constants import constants
 
 
 class UsersRepository(BaseRepository):

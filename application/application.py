@@ -8,6 +8,7 @@ from application.blueprints import general_blueprint
 from application.blueprints.v1 import (
     auth_blueprint,
     polls_blueprint,
+    revise_requests_blueprint,
     users_blueprint
 )
 
@@ -22,4 +23,5 @@ swagger = Swagger(
 application.register_blueprint(general_blueprint)
 application.register_blueprint(auth_blueprint)
 application.register_blueprint(polls_blueprint)
+application.register_blueprint(revise_requests_blueprint)
 application.register_blueprint(users_blueprint)

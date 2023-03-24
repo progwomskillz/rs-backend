@@ -1,0 +1,30 @@
+tags:
+  - "Revise Requests"
+
+parameters:
+  - in: "body"
+    name: "body"
+    required: true
+    schema:
+      type: "object"
+      properties:
+        poll_id:
+          type: "string"
+          required: true
+
+responses:
+  200:
+    schema:
+      $ref: "#/definitions/ReviseRequest"
+  400:
+    schema:
+      $ref: "#/definitions/Error"
+  401:
+    schema:
+      $ref: "#/definitions/Error"
+  403:
+    schema:
+      $ref: "#/definitions/Error"
+  404:
+    schema:
+      $ref: "#/definitions/Error"

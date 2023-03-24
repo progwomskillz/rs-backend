@@ -65,7 +65,6 @@ class TestGetPollsSummaryUseCase():
 
         principal = Principal(user, tokens_pair)
 
-        user_id = None
         get_polls_summary_request = GetPollsSummaryRequest(principal)
 
         for _ in range(2):

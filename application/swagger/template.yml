@@ -121,3 +121,11 @@ definitions:
         type: "integer"
       page_count:
         type: "integer"
+
+  ReviseRequest:
+    type: "object"
+    properties:
+      id:
+        type: "string"
+      poll:
+        $ref: "#/definitions/Poll"
