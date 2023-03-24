@@ -1,31 +1,21 @@
 tags:
   - "Polls"
 
+consumes:
+  - "multipart/form-data"
 parameters:
-  - in: "body"
-    name: "body"
+  - in: "formData"
+    name: "file"
+    type: "file"
     required: true
-    schema:
-      type: "object"
-      properties:
-        community_name:
-          type: "string"
-          required: true
-        community_size:
-          type: "integer"
-          required: true
-        feedbacks:
-          type: "array"
-          required: true
-          items:
-            type: "object"
-            properties:
-              bothers:
-                type: "string"
-                required: true
-              age:
-                type: "integer"
-                required: true
+  - in: "formData"
+    name: "community_name"
+    type: "string"
+    required: true
+  - in: "formData"
+    name: "community_size"
+    type: "integer"
+    required: true
 
 responses:
   200:

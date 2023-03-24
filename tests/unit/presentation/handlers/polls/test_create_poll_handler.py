@@ -28,11 +28,17 @@ class TestCreatePollHandler():
         request_mock.principal = principal_mock
         community_name = "test_community_name"
         community_size = 25
-        feedbacks = [{"bothers": "test_bothers", "age": 19}]
-        request_mock.json = {
+        file_mock = Mock()
+        file_readed_mock = Mock()
+        file_readed_decoded_mock = "1,2\nfamily\nasdhealthfam,25,qwd\ntest,sadas"
+        file_readed_mock.decode.return_value = file_readed_decoded_mock
+        file_mock.read.return_value = file_readed_mock
+        request_mock.form = {
             "community_name": community_name,
-            "community_size": community_size,
-            "feedbacks": feedbacks
+            "community_size": community_size
+        }
+        request_mock.files = {
+            "file": file_mock
         }
 
         expected_result_mock = Mock()
@@ -45,12 +51,12 @@ class TestCreatePollHandler():
             principal_mock,
             community_name,
             community_size,
-            [feedback_mock]
+            [feedback_mock, feedback_mock, feedback_mock]
         )
-        Feedback_mock.assert_called_once_with(
-            feedbacks[0]["bothers"],
-            feedbacks[0]["age"]
-        )
+        assert Feedback_mock.call_count == 3
+        Feedback_mock.assert_any_call("family", None)
+        Feedback_mock.assert_any_call("asdhealthfam", 25)
+        Feedback_mock.assert_any_call("test", None)
         self.use_case_mock.create_poll.assert_called_once_with(
             create_poll_request_mock
         )
