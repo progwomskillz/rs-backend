@@ -48,12 +48,10 @@ class TestGetPollsPageUseCase():
 
     def test_get_polls_page_invalid_principal(self):
         principal = None
-        user_id = None
         page = None
         page_size = None
         get_polls_page_request = GetPollsPageRequest(
             principal,
-            user_id,
             page,
             page_size
         )
@@ -64,12 +62,10 @@ class TestGetPollsPageUseCase():
     def test_get_polls_page_invalid_principal_role(self):
         user = UserFactory.admin()
         principal = Principal(user, None)
-        user_id = None
         page = None
         page_size = None
         get_polls_page_request = GetPollsPageRequest(
             principal,
-            user_id,
             page,
             page_size
         )
@@ -86,12 +82,10 @@ class TestGetPollsPageUseCase():
         self.users_repository.update(user)
 
         principal = Principal(user, tokens_pair)
-        user_id = 15
         page = None
         page_size = None
         get_polls_page_request = GetPollsPageRequest(
             principal,
-            user_id,
             page,
             page_size
         )
@@ -100,12 +94,6 @@ class TestGetPollsPageUseCase():
             self.use_case.get_polls_page(get_polls_page_request)
 
         assert e.value.errors == {
-            "user_id": [
-                {
-                    "message": "Must be of type \"string\"",
-                    "code": "type"
-                }
-            ],
             "page": [
                 {
                     "message": "Has to be present",
@@ -137,12 +125,10 @@ class TestGetPollsPageUseCase():
         self.users_repository.update(user)
 
         principal = Principal(user, tokens_pair)
-        user_id = None
         page = None
         page_size = None
         get_polls_page_request = GetPollsPageRequest(
             principal,
-            user_id,
             page,
             page_size
         )
@@ -183,12 +169,10 @@ class TestGetPollsPageUseCase():
 
         principal = Principal(user, tokens_pair)
 
-        user_id = None
         page = 1
         page_size = 10
         get_polls_page_request = GetPollsPageRequest(
             principal,
-            user_id,
             page,
             page_size
         )

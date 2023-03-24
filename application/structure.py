@@ -13,7 +13,11 @@ from data.translators.users import (
 )
 from data.utils.wrappers import BcryptWrapper, EnvWrapper, JWTWrapper
 from domain.use_cases.auth import LoginUseCase, LogoutUseCase, RefreshUseCase
-from domain.use_cases.polls import CreatePollUseCase, GetPollsPageUseCase
+from domain.use_cases.polls import (
+    CreatePollUseCase,
+    GetPollsPageUseCase,
+    GetPollsSummaryUseCase
+)
 from domain.use_cases.users import CreateUserUseCase, GetUsersPageUseCase
 from domain.utils.validation.auth import (
     LoginRequestValidationUtil,
@@ -42,7 +46,11 @@ from presentation.handlers.auth import (
     LogoutHandler,
     RefreshHandler
 )
-from presentation.handlers.polls import CreatePollHandler, GetPollsPageHandler
+from presentation.handlers.polls import (
+    CreatePollHandler,
+    GetPollsPageHandler,
+    GetPollsSummaryHandler
+)
 from presentation.handlers.users import CreateUserHandler, GetUsersPageHandler
 from presentation.presenters.auth import TokensPairPresenter
 from presentation.presenters.polls import PollPresenter, StatsPresenter
@@ -52,7 +60,7 @@ from presentation.presenters.users import (
     PublicOfficialProfilePresenter,
     UserPresenter
 )
-from presentation.presenters import PagePresenter
+from presentation.presenters import ListPresenter, PagePresenter
 from presentation.utils import PrincipalUtil
 
 
@@ -67,7 +75,8 @@ class Structure():
             self.env_wrapper.get("DB_PORT"),
             self.env_wrapper.get("DB_NAME"),
             "polls",
-            self.poll_translator
+            self.poll_translator,
+            self.stats_translator
         )
 
     @property
@@ -185,6 +194,14 @@ class Structure():
         )
 
     @property
+    def get_polls_summary_use_case(self):
+        return GetPollsSummaryUseCase(
+            self.principal_validation_util,
+            self.rbac_validation_util,
+            self.polls_repository
+        )
+
+    @property
     def create_user_use_case(self):
         return CreateUserUseCase(
             self.principal_validation_util,
@@ -230,7 +247,6 @@ class Structure():
     def get_polls_page_request_validation_util(self):
         return GetPollsPageRequestValidationUtil(
             self.presence_validator,
-            self.string_type_validator,
             self.int_type_validator
         )
 
@@ -327,6 +343,14 @@ class Structure():
         )
 
     @property
+    def get_polls_summary_handler(self):
+        return GetPollsSummaryHandler(
+            self.get_polls_summary_use_case,
+            self.stats_list_presenter,
+            self.principal_util
+        )
+
+    @property
     def create_user_handler(self):
         return CreateUserHandler(
             self.create_user_use_case,
@@ -348,10 +372,7 @@ class Structure():
 
     @property
     def poll_presenter(self):
-        return PollPresenter(
-            self.user_presenter,
-            self.stats_presenter
-        )
+        return PollPresenter(self.stats_list_presenter)
 
     @property
     def polls_page_presenter(self):
@@ -360,6 +381,10 @@ class Structure():
     @property
     def stats_presenter(self):
         return StatsPresenter()
+
+    @property
+    def stats_list_presenter(self):
+        return ListPresenter(self.stats_presenter)
 
     @property
     def admin_profile_presenter(self):

@@ -13,71 +13,24 @@ class TestGetPollsPageRequestValidationUtil():
 
         self.validation_util = GetPollsPageRequestValidationUtil(
             self.presence_validator_mock,
-            self.string_type_validator_mock,
             self.int_type_validator_mock,
         )
 
     def test_init(self):
         assert self.validation_util.presence_validator ==\
             self.presence_validator_mock
-        assert self.validation_util.string_type_validator ==\
-            self.string_type_validator_mock
         assert self.validation_util.int_type_validator ==\
             self.int_type_validator_mock
-
-    def test_validate_invalid_user_id(self):
-        self.presence_validator_mock.is_valid.return_value = False
-        self.presence_validator_mock.error = "presence_error"
-        self.string_type_validator_mock.is_valid.return_value = False
-        self.string_type_validator_mock.error = "string_type_error"
-        self.int_type_validator_mock.is_valid.return_value = False
-        self.int_type_validator_mock.error = "int_type_error"
-
-        get_polls_page_request_mock = Mock()
-        principal_mock = Mock()
-        get_polls_page_request_mock.principal = principal_mock
-        get_polls_page_request_mock.user_id = 15
-        get_polls_page_request_mock.page = None
-        get_polls_page_request_mock.page_size = None
-
-        with pytest.raises(InvalidRequest) as e:
-            self.validation_util.validate(get_polls_page_request_mock)
-
-        assert e.value.errors == {
-            "user_id": ["string_type_error"],
-            "page": ["presence_error", "int_type_error"],
-            "page_size": ["presence_error", "int_type_error"]
-        }
-        assert self.presence_validator_mock.is_valid.call_count == 2
-        self.presence_validator_mock.is_valid.assert_any_call(
-            get_polls_page_request_mock.page
-        )
-        self.presence_validator_mock.is_valid.assert_any_call(
-            get_polls_page_request_mock.page_size
-        )
-        self.string_type_validator_mock.is_valid.assert_called_once_with(
-            get_polls_page_request_mock.user_id
-        )
-        assert self.int_type_validator_mock.is_valid.call_count == 2
-        self.int_type_validator_mock.is_valid.assert_any_call(
-            get_polls_page_request_mock.page
-        )
-        self.int_type_validator_mock.is_valid.assert_any_call(
-            get_polls_page_request_mock.page_size
-        )
 
     def test_validate_invalid(self):
         self.presence_validator_mock.is_valid.return_value = False
         self.presence_validator_mock.error = "presence_error"
-        self.string_type_validator_mock.is_valid.return_value = False
-        self.string_type_validator_mock.error = "string_type_error"
         self.int_type_validator_mock.is_valid.return_value = False
         self.int_type_validator_mock.error = "int_type_error"
 
         get_polls_page_request_mock = Mock()
         principal_mock = Mock()
         get_polls_page_request_mock.principal = principal_mock
-        get_polls_page_request_mock.user_id = None
         get_polls_page_request_mock.page = None
         get_polls_page_request_mock.page_size = None
 
@@ -95,7 +48,6 @@ class TestGetPollsPageRequestValidationUtil():
         self.presence_validator_mock.is_valid.assert_any_call(
             get_polls_page_request_mock.page_size
         )
-        self.string_type_validator_mock.is_valid.assert_not_called()
         assert self.int_type_validator_mock.is_valid.call_count == 2
         self.int_type_validator_mock.is_valid.assert_any_call(
             get_polls_page_request_mock.page
@@ -112,7 +64,6 @@ class TestGetPollsPageRequestValidationUtil():
         get_polls_page_request_mock = Mock()
         principal_mock = Mock()
         get_polls_page_request_mock.principal = principal_mock
-        get_polls_page_request_mock.user_id = None
         get_polls_page_request_mock.page = 1
         get_polls_page_request_mock.page_size = 10
 
@@ -125,7 +76,6 @@ class TestGetPollsPageRequestValidationUtil():
         self.presence_validator_mock.is_valid.assert_any_call(
             get_polls_page_request_mock.page_size
         )
-        self.string_type_validator_mock.is_valid.assert_not_called()
         assert self.int_type_validator_mock.is_valid.call_count == 2
         self.int_type_validator_mock.is_valid.assert_any_call(
             get_polls_page_request_mock.page

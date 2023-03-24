@@ -1,5 +1,5 @@
 import pytest
-from mock import Mock, patch
+from mock import Mock
 
 from domain.entities.exceptions import (
     InvalidRequest,
@@ -8,7 +8,6 @@ from domain.entities.exceptions import (
 )
 from domain.use_cases.polls import GetPollsPageUseCase
 from domain.utils import constants
-from tests.factories.polls import FeedbackFactory
 
 
 class TestGetPollsPaageUseCase():

@@ -122,3 +122,26 @@ class TestPollsRepository():
         assert len(result.items) == page_size
         assert result.page == page
         assert result.page_count == page * 2 + 1
+
+    def test_get_summary(self):
+        for _ in range(2):
+            temp_user = UserFactory.community_social_worker()
+            temp_user.id = str(ObjectId())
+            temp_user.on_create(self.users_repository.create(temp_user))
+            poll = PollFactory.generic()
+            poll.user = temp_user
+            self.repository.create(poll)
+
+        result = self.repository.get_summary()
+
+        assert isinstance(result, list) is True
+        assert len(result) == 3
+        assert result[0].title == "family"
+        assert result[0].count == 20
+        assert result[0].percentage == 100
+        assert result[1].title == "health"
+        assert result[1].count == 20
+        assert result[1].percentage == 100
+        assert result[2].title == "unknown"
+        assert result[2].count == 0
+        assert result[2].percentage == 0

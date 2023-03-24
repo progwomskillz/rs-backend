@@ -25,12 +25,12 @@ class GetPollsPageUseCase():
         self.get_polls_page_request_validation_util.validate(
             get_polls_page_request
         )
+        user_id = None
         if get_polls_page_request.principal.user.role ==\
             constants.user_roles.community_social_worker:
-            get_polls_page_request.user_id =\
-                get_polls_page_request.principal.user.id
+            user_id = get_polls_page_request.principal.user.id
         return self.polls_repository.get_page(
-            get_polls_page_request.user_id,
+            user_id,
             get_polls_page_request.page,
             get_polls_page_request.page_size
         )

@@ -1,0 +1,15 @@
+tags:
+  - "Polls"
+
+responses:
+  200:
+    schema:
+      type: "array"
+      items:
+        $ref: "#/definitions/Stats"
+  401:
+    schema:
+      $ref: "#/definitions/Error"
+  403:
+    schema:
+      $ref: "#/definitions/Error"

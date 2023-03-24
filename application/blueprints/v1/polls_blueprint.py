@@ -18,3 +18,9 @@ def create_poll():
 @swag_from(f"{base_swagger_path}/get_polls_page.yml")
 def get_polls_page():
     return structure.get_polls_page_handler.handle(request)
+
+
+@polls_blueprint.route("/summary", methods=["GET"])
+@swag_from(f"{base_swagger_path}/get_polls_summary.yml")
+def get_polls_summary():
+    return structure.get_polls_summary_handler.handle(request)

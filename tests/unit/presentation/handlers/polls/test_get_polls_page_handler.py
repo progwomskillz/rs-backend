@@ -38,7 +38,6 @@ class TestGetPollsPageHandler():
         assert result == expected_result_mock
         GetPollsPageRequest_mock.assert_called_once_with(
             principal_mock,
-            None,
             page,
             page_size
         )

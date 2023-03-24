@@ -21,13 +21,6 @@ class TestGetPollsPageRequestValidationUtil():
             PresenceValidator
         ) is True
         assert isinstance(
-            self.validation_util.string_type_validator,
-            TypeValidator
-        ) is True
-        assert self.validation_util.string_type_validator.type == str
-        assert self.validation_util.string_type_validator\
-            .string_type_presentation == "string"
-        assert isinstance(
             self.validation_util.int_type_validator,
             TypeValidator
         ) is True
@@ -40,48 +33,6 @@ class TestGetPollsPageRequestValidationUtil():
         principal = Principal(user, None)
         get_polls_page_request = GetPollsPageRequest(
             principal,
-            15,
-            None,
-            None
-        )
-
-        with pytest.raises(InvalidRequest) as e:
-            self.validation_util.validate(get_polls_page_request)
-
-        assert e.value.errors == {
-            "user_id": [
-                {
-                    "message": "Must be of type \"string\"",
-                    "code": "type"
-                }
-            ],
-            "page": [
-                {
-                    "message": "Has to be present",
-                    "code": "presence"
-                },
-                {
-                    "message": "Must be of type \"integer\"",
-                    "code": "type"
-                }
-            ],
-            "page_size": [
-                {
-                    "message": "Has to be present",
-                    "code": "presence"
-                },
-                {
-                    "message": "Must be of type \"integer\"",
-                    "code": "type"
-                }
-            ]
-        }
-
-        user = UserFactory.public_official()
-        principal = Principal(user, None)
-        get_polls_page_request = GetPollsPageRequest(
-            principal,
-            None,
             None,
             None
         )
@@ -117,18 +68,6 @@ class TestGetPollsPageRequestValidationUtil():
         principal = Principal(user, None)
         get_polls_page_request = GetPollsPageRequest(
             principal,
-            "test_user_id",
-            1,
-            10
-        )
-
-        self.validation_util.validate(get_polls_page_request)
-
-        user = UserFactory.public_official()
-        principal = Principal(user, None)
-        get_polls_page_request = GetPollsPageRequest(
-            principal,
-            None,
             1,
             10
         )

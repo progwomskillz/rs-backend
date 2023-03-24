@@ -4,7 +4,7 @@ from .base_repository import BaseRepository
 class PollsRepository(BaseRepository):
     def __init__(
         self, scheme, username, password, host, port, db_name, collection_name,
-        translator
+        translator, stats_translator
     ):
         family_tag_search_pipeline = self.__generate_tag_search_pipeline(
             "family", 25, "lt"
@@ -12,20 +12,7 @@ class PollsRepository(BaseRepository):
         health_tag_search_pipeline = self.__generate_tag_search_pipeline(
             "health", 18, "gt"
         )
-        default_pipeline = [
-            {
-                "$lookup": {
-                    "from": "users",
-                    "localField": "user_id",
-                    "foreignField": "_id",
-                    "as": "user"
-                }
-            },
-            {
-                "$unwind": {
-                    "path": "$user"
-                }
-            },
+        self.calc_summary_pipeline = [
             {
                 "$addFields": {
                     "summary": {
@@ -127,10 +114,27 @@ class PollsRepository(BaseRepository):
                 }
             }
         ]
+        default_pipeline = [
+            {
+                "$lookup": {
+                    "from": "users",
+                    "localField": "user_id",
+                    "foreignField": "_id",
+                    "as": "user"
+                }
+            },
+            {
+                "$unwind": {
+                    "path": "$user"
+                }
+            },
+            *self.calc_summary_pipeline
+        ]
         super().__init__(
             scheme, username, password, host, port, db_name, collection_name,
             translator, default_pipeline
         )
+        self.stats_translator = stats_translator
 
     def get_page(self, user_id, page, page_size):
         pipeline = []
@@ -139,6 +143,30 @@ class PollsRepository(BaseRepository):
                 {"$match": {"user._id": self._to_object_id(user_id)}}
             )
         return self._get_page(pipeline, page, page_size)
+
+    def get_summary(self):
+        cursor = list(self.collection.aggregate([
+            {
+                "$unwind": {
+                    "path": "$feedbacks"
+                }
+            },
+            {
+                "$group": {
+                    "_id": None,
+                    "feedbacks": {
+                        "$push": "$feedbacks"
+                    }
+                }
+            },
+            *self.calc_summary_pipeline
+        ]))
+        if not cursor:
+            return []
+        return [
+            self.stats_translator.from_document(stats)
+            for stats in cursor[0].get("summary", [])
+        ]
 
     def __generate_tag_search_pipeline(self, tag, age, age_cond):
         return {

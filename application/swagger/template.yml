@@ -91,8 +91,6 @@ definitions:
     properties:
       id:
         type: "string"
-      user:
-        $ref: "#/definitions/User"
       community_name:
         type: "string"
       community_size:
