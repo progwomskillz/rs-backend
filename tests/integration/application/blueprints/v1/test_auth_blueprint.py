@@ -10,7 +10,7 @@ class TestAuthBlueprint():
         self.context = application.app_context()
         self.context.push()
 
-        self.users_repository = structure.users_repository
+        self.users_repository = structure.mongo_users_repository
 
     def teardown_method(self):
         self.users_repository.collection.delete_many({})

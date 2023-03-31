@@ -1,7 +1,7 @@
 import pytest
 
 from application.structure import structure
-from data.repositories import UsersRepository
+from data.repositories.mongo import MongoUsersRepository
 from data.utils.wrappers import BcryptWrapper, JWTWrapper
 from domain.entities.auth.requests import LoginRequest
 from domain.entities.auth import TokensPair
@@ -14,7 +14,7 @@ class TestLoginUseCase():
     def setup_method(self):
         self.use_case = structure.login_use_case
 
-        self.users_repository = structure.users_repository
+        self.users_repository = structure.mongo_users_repository
 
     def teardown_method(self):
         self.users_repository.collection.delete_many({})
@@ -26,7 +26,7 @@ class TestLoginUseCase():
         ) is True
         assert isinstance(
             self.use_case.users_repository,
-            UsersRepository
+            MongoUsersRepository
         ) is True
         assert isinstance(
             self.use_case.password_util,

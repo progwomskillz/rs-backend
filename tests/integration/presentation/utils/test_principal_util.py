@@ -1,7 +1,7 @@
 import os
 
 from application.structure import structure
-from data.repositories import UsersRepository
+from data.repositories.mongo import MongoUsersRepository
 from data.utils.wrappers import JWTWrapper
 from domain.entities.auth import TokensPayload, Principal, TokensPair
 from domain.entities.users import User
@@ -12,7 +12,7 @@ class TestPrincipalUtil():
     def setup_method(self):
         self.util = structure.principal_util
 
-        self.users_repository = structure.users_repository
+        self.users_repository = structure.mongo_users_repository
 
     def teardown_method(self):
         self.users_repository.collection.delete_many({})
@@ -20,7 +20,7 @@ class TestPrincipalUtil():
     def test_init(self):
         assert self.util.allowed_token_type == os.environ["JWT_TYPE"].lower()
         assert isinstance(self.util.tokens_util, JWTWrapper) is True
-        assert isinstance(self.util.users_repository, UsersRepository) is True
+        assert isinstance(self.util.users_repository, MongoUsersRepository) is True
 
     def test_get_authorization_header_not_str(self):
         authorization_header = 123

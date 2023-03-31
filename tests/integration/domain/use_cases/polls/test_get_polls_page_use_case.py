@@ -1,7 +1,7 @@
 import pytest
 
 from application.structure import structure
-from data.repositories import PollsRepository
+from data.repositories.mongo import MongoPollsRepository
 from domain.entities.auth import Principal, TokensPayload
 from domain.entities.exceptions import (
     UnauthenticatedException,
@@ -21,8 +21,8 @@ class TestGetPollsPageUseCase():
     def setup_method(self):
         self.use_case = structure.get_polls_page_use_case
 
-        self.polls_repository = structure.polls_repository
-        self.users_repository = structure.users_repository
+        self.polls_repository = structure.mongo_polls_repository
+        self.users_repository = structure.mongo_users_repository
 
     def teardown_method(self):
         self.polls_repository.collection.delete_many({})
@@ -43,7 +43,7 @@ class TestGetPollsPageUseCase():
         ) is True
         assert isinstance(
             self.use_case.polls_repository,
-            PollsRepository
+            MongoPollsRepository
         ) is True
 
     def test_get_polls_page_invalid_principal(self):

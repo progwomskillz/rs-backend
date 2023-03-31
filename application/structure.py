@@ -1,20 +1,20 @@
-from data.repositories import (
-    PollsRepository,
-    ReviseRequestsRepository,
-    UsersRepository
+from data.repositories.mongo import (
+    MongoPollsRepository,
+    MongoReviseRequestsRepository,
+    MongoUsersRepository
 )
-from data.translators.auth import TokensPairTranslator
-from data.translators.polls import (
-    FeedbackTranslator,
-    PollTranslator,
-    StatsTranslator
+from data.translators.mongo.auth import MongoTokensPairTranslator
+from data.translators.mongo.polls import (
+    MongoFeedbackTranslator,
+    MongoPollTranslator,
+    MongoStatsTranslator
 )
-from data.translators.revise_requests import ReviseRequestTranslator
-from data.translators.users import (
-    AdminProfileTranslator,
-    CommunitySocialWorkerProfileTranslator,
-    PublicOfficialProfileTranslator,
-    UserTranslator
+from data.translators.mongo.revise_requests import MongoReviseRequestTranslator
+from data.translators.mongo.users import (
+    MongoAdminProfileTranslator,
+    MongoCommunitySocialWorkerProfileTranslator,
+    MongoPublicOfficialProfileTranslator,
+    MongoUserTranslator
 )
 from data.utils.wrappers import BcryptWrapper, EnvWrapper, JWTWrapper
 from domain.use_cases.auth import LoginUseCase, LogoutUseCase, RefreshUseCase
@@ -84,92 +84,92 @@ from presentation.utils import PrincipalUtil
 
 class Structure():
     @property
-    def polls_repository(self):
-        return PollsRepository(
-            self.env_wrapper.get("DB_SCHEME"),
-            self.env_wrapper.get("DB_USERNAME"),
-            self.env_wrapper.get("DB_PASSWORD"),
-            self.env_wrapper.get("DB_HOST"),
-            self.env_wrapper.get("DB_PORT"),
-            self.env_wrapper.get("DB_NAME"),
+    def mongo_polls_repository(self):
+        return MongoPollsRepository(
+            self.env_wrapper.get("DB_MONGO_SCHEME"),
+            self.env_wrapper.get("DB_MONGO_USERNAME"),
+            self.env_wrapper.get("DB_MONGO_PASSWORD"),
+            self.env_wrapper.get("DB_MONGO_HOST"),
+            self.env_wrapper.get("DB_MONGO_PORT"),
+            self.env_wrapper.get("DB_MONGO_NAME"),
             "polls",
-            self.poll_translator,
-            self.stats_translator
+            self.mongo_poll_translator,
+            self.mongo_stats_translator
         )
 
     @property
-    def revise_requests_repository(self):
-        return ReviseRequestsRepository(
-            self.env_wrapper.get("DB_SCHEME"),
-            self.env_wrapper.get("DB_USERNAME"),
-            self.env_wrapper.get("DB_PASSWORD"),
-            self.env_wrapper.get("DB_HOST"),
-            self.env_wrapper.get("DB_PORT"),
-            self.env_wrapper.get("DB_NAME"),
+    def mongo_revise_requests_repository(self):
+        return MongoReviseRequestsRepository(
+            self.env_wrapper.get("DB_MONGO_SCHEME"),
+            self.env_wrapper.get("DB_MONGO_USERNAME"),
+            self.env_wrapper.get("DB_MONGO_PASSWORD"),
+            self.env_wrapper.get("DB_MONGO_HOST"),
+            self.env_wrapper.get("DB_MONGO_PORT"),
+            self.env_wrapper.get("DB_MONGO_NAME"),
             "revise_requests",
-            self.revise_request_translator
+            self.mongo_revise_request_translator
         )
 
     @property
-    def users_repository(self):
-        return UsersRepository(
-            self.env_wrapper.get("DB_SCHEME"),
-            self.env_wrapper.get("DB_USERNAME"),
-            self.env_wrapper.get("DB_PASSWORD"),
-            self.env_wrapper.get("DB_HOST"),
-            self.env_wrapper.get("DB_PORT"),
-            self.env_wrapper.get("DB_NAME"),
+    def mongo_users_repository(self):
+        return MongoUsersRepository(
+            self.env_wrapper.get("DB_MONGO_SCHEME"),
+            self.env_wrapper.get("DB_MONGO_USERNAME"),
+            self.env_wrapper.get("DB_MONGO_PASSWORD"),
+            self.env_wrapper.get("DB_MONGO_HOST"),
+            self.env_wrapper.get("DB_MONGO_PORT"),
+            self.env_wrapper.get("DB_MONGO_NAME"),
             "users",
-            self.user_translator
+            self.mongo_user_translator
         )
 
     @property
-    def tokens_pair_translator(self):
-        return TokensPairTranslator()
+    def mongo_tokens_pair_translator(self):
+        return MongoTokensPairTranslator()
 
     @property
-    def feedback_translator(self):
-        return FeedbackTranslator()
+    def mongo_feedback_translator(self):
+        return MongoFeedbackTranslator()
 
     @property
-    def poll_translator(self):
-        return PollTranslator(
-            self.user_translator,
-            self.feedback_translator,
-            self.stats_translator
+    def mongo_poll_translator(self):
+        return MongoPollTranslator(
+            self.mongo_user_translator,
+            self.mongo_feedback_translator,
+            self.mongo_stats_translator
         )
 
     @property
-    def stats_translator(self):
-        return StatsTranslator()
+    def mongo_stats_translator(self):
+        return MongoStatsTranslator()
 
     @property
-    def revise_request_translator(self):
-        return ReviseRequestTranslator(
-            self.user_translator,
-            self.poll_translator
+    def mongo_revise_request_translator(self):
+        return MongoReviseRequestTranslator(
+            self.mongo_user_translator,
+            self.mongo_poll_translator
         )
 
     @property
-    def admin_profile_translator(self):
-        return AdminProfileTranslator()
+    def mongo_admin_profile_translator(self):
+        return MongoAdminProfileTranslator()
 
     @property
-    def community_social_worker_profile_translator(self):
-        return CommunitySocialWorkerProfileTranslator()
+    def mongo_community_social_worker_profile_translator(self):
+        return MongoCommunitySocialWorkerProfileTranslator()
 
     @property
-    def public_official_profile_translator(self):
-        return PublicOfficialProfileTranslator()
+    def mongo_public_official_profile_translator(self):
+        return MongoPublicOfficialProfileTranslator()
 
     @property
-    def user_translator(self):
-        return UserTranslator(
-            self.tokens_pair_translator,
+    def mongo_user_translator(self):
+        return MongoUserTranslator(
+            self.mongo_tokens_pair_translator,
             {
-                constants.user_roles.admin: self.admin_profile_translator,
-                constants.user_roles.community_social_worker: self.community_social_worker_profile_translator,
-                constants.user_roles.public_official: self.public_official_profile_translator
+                constants.user_roles.admin: self.mongo_admin_profile_translator,
+                constants.user_roles.community_social_worker: self.mongo_community_social_worker_profile_translator,
+                constants.user_roles.public_official: self.mongo_public_official_profile_translator
             }
         )
 
@@ -193,7 +193,7 @@ class Structure():
     def login_use_case(self):
         return LoginUseCase(
             self.login_request_validation_util,
-            self.users_repository,
+            self.mongo_users_repository,
             self.bcrypt_wrapper,
             self.jwt_wrapper
         )
@@ -202,14 +202,14 @@ class Structure():
     def logout_use_case(self):
         return LogoutUseCase(
             self.principal_validation_util,
-            self.users_repository
+            self.mongo_users_repository
         )
 
     @property
     def refresh_use_case(self):
         return RefreshUseCase(
             self.refresh_request_validation_util,
-            self.users_repository,
+            self.mongo_users_repository,
             self.jwt_wrapper
         )
 
@@ -219,7 +219,7 @@ class Structure():
             self.principal_validation_util,
             self.rbac_validation_util,
             self.create_poll_request_validation_util,
-            self.polls_repository
+            self.mongo_polls_repository
         )
 
     @property
@@ -228,7 +228,7 @@ class Structure():
             self.principal_validation_util,
             self.rbac_validation_util,
             self.get_polls_page_request_validation_util,
-            self.polls_repository
+            self.mongo_polls_repository
         )
 
     @property
@@ -236,7 +236,7 @@ class Structure():
         return GetPollsSummaryUseCase(
             self.principal_validation_util,
             self.rbac_validation_util,
-            self.polls_repository
+            self.mongo_polls_repository
         )
 
     @property
@@ -245,8 +245,8 @@ class Structure():
             self.principal_validation_util,
             self.rbac_validation_util,
             self.create_revise_request_request_validation_util,
-            self.revise_requests_repository,
-            self.polls_repository
+            self.mongo_revise_requests_repository,
+            self.mongo_polls_repository
         )
 
     @property
@@ -255,7 +255,7 @@ class Structure():
             self.principal_validation_util,
             self.rbac_validation_util,
             self.get_revise_requests_page_request_validation_util,
-            self.revise_requests_repository
+            self.mongo_revise_requests_repository
         )
 
     @property
@@ -265,7 +265,7 @@ class Structure():
             self.rbac_validation_util,
             self.create_user_request_validation_util,
             self.bcrypt_wrapper,
-            self.users_repository
+            self.mongo_users_repository
         )
 
     @property
@@ -274,7 +274,7 @@ class Structure():
             self.principal_validation_util,
             self.rbac_validation_util,
             self.get_users_page_request_validation_util,
-            self.users_repository
+            self.mongo_users_repository
         )
 
     @property
@@ -335,7 +335,7 @@ class Structure():
             self.presence_validator,
             self.string_type_validator,
             roles_entry_validator,
-            self.users_repository
+            self.mongo_users_repository
         )
 
     @property
@@ -512,7 +512,7 @@ class Structure():
         return PrincipalUtil(
             self.env_wrapper.get("JWT_TYPE"),
             self.jwt_wrapper,
-            self.users_repository
+            self.mongo_users_repository
         )
 
     @property

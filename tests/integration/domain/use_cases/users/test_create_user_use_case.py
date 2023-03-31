@@ -1,7 +1,7 @@
 import pytest
 
 from application.structure import structure
-from data.repositories import UsersRepository
+from data.repositories.mongo import MongoUsersRepository
 from data.utils.wrappers import BcryptWrapper
 from domain.entities.auth import TokensPayload, Principal
 from domain.entities.exceptions import (
@@ -25,7 +25,7 @@ class TestCreateUserUseCase():
     def setup_method(self):
         self.use_case = structure.create_user_use_case
 
-        self.users_repository = structure.users_repository
+        self.users_repository = structure.mongo_users_repository
 
     def teardown_method(self):
         self.users_repository.collection.delete_many({})
@@ -46,7 +46,7 @@ class TestCreateUserUseCase():
         assert isinstance(self.use_case.password_util, BcryptWrapper) is True
         assert isinstance(
             self.use_case.users_repository,
-            UsersRepository
+            MongoUsersRepository
         ) is True
 
     def test_create_user_invalid_principal(self):

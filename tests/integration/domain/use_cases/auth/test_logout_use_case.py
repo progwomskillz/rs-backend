@@ -1,7 +1,7 @@
 import pytest
 
 from application.structure import structure
-from data.repositories import UsersRepository
+from data.repositories.mongo import MongoUsersRepository
 from domain.entities.auth.requests import LogoutRequest
 from domain.entities.auth import TokensPayload, Principal
 from domain.entities.exceptions import UnauthenticatedException
@@ -13,7 +13,7 @@ class TestLogoutUseCase():
     def setup_method(self):
         self.use_case = structure.logout_use_case
 
-        self.users_repository = structure.users_repository
+        self.users_repository = structure.mongo_users_repository
 
     def teardown_method(self):
         self.users_repository.collection.delete_many({})
@@ -25,7 +25,7 @@ class TestLogoutUseCase():
         ) is True
         assert isinstance(
             self.use_case.users_repository,
-            UsersRepository
+            MongoUsersRepository
         ) is True
 
     def test_logout_invalid_principal(self):

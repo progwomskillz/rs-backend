@@ -1,0 +1,3 @@
+from .mongo_polls_repository import MongoPollsRepository
+from .mongo_revise_requests_repository import MongoReviseRequestsRepository
+from .mongo_users_repository import MongoUsersRepository

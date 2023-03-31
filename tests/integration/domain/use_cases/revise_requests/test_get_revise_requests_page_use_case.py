@@ -1,7 +1,7 @@
 import pytest
 
 from application.structure import structure
-from data.repositories import ReviseRequestsRepository
+from data.repositories.mongo import MongoReviseRequestsRepository
 from domain.entities.auth import Principal, TokensPayload
 from domain.entities.exceptions import (
     UnauthenticatedException,
@@ -22,9 +22,9 @@ class TestGetReviseRequestsPageUseCase():
     def setup_method(self):
         self.use_case = structure.get_revise_requests_page_use_case
 
-        self.revise_requests_repository = structure.revise_requests_repository
-        self.users_repository = structure.users_repository
-        self.polls_repository = structure.polls_repository
+        self.revise_requests_repository = structure.mongo_revise_requests_repository
+        self.users_repository = structure.mongo_users_repository
+        self.polls_repository = structure.mongo_polls_repository
 
     def teardown_method(self):
         self.revise_requests_repository.collection.delete_many({})
@@ -46,7 +46,7 @@ class TestGetReviseRequestsPageUseCase():
         ) is True
         assert isinstance(
             self.use_case.revise_requests_repository,
-            ReviseRequestsRepository
+            MongoReviseRequestsRepository
         ) is True
 
     def test_get_revise_requests_page_invalid_principal(self):

@@ -48,4 +48,4 @@ user = User(
     [],
     profile
 )
-structure.users_repository.create(user)
+structure.mongo_users_repository.create(user)
