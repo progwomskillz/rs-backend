@@ -29,7 +29,24 @@ services:
     ports:
       - "${DB_MONGO_PORT}:27017"
     volumes:
-      - "~${DOCKER_SHARED_VOLUME_PATH}${APP_NAME}/db:/data/db"
+      - "~${DOCKER_SHARED_VOLUME_PATH}${APP_NAME}/db_mongo:/data/db"
     environment:
       MONGO_INITDB_ROOT_USERNAME: "${DB_MONGO_USERNAME}"
       MONGO_INITDB_ROOT_PASSWORD: "${DB_MONGO_PASSWORD}"
+  db_postgresql:
+    image: "postgres:15.2"
+    container_name: "db_postgresql"
+    restart: "unless-stopped"
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "5m"
+        max-file: "3"
+    ports:
+      - "${DB_POSTGRESQL_PORT}:5432"
+    volumes:
+      - "~${DOCKER_SHARED_VOLUME_PATH}${APP_NAME}/db_postgresql:/var/lib/postgresql"
+    environment:
+      POSTGRES_USER: "${DB_POSTGRESQL_USERNAME}"
+      POSTGRES_PASSWORD: "${DB_POSTGRESQL_PASSWORD}"
+      POSTGRES_DB: "${DB_POSTGRESQL_NAME}"
